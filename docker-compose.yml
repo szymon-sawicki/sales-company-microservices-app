@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+
+  mysql1:
+    image: mysql:latest
+    volumes:
+      - mysql1:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_1
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user1234
+      MYSQL_TCP_PORT: 3307
+    ports:
+      - 3307:3307
+    expose:
+      - 3307
+    networks:
+      - sales-company-network
+
+
+  eureka-server:
+    image: eureka-server
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    restart: always
+    networks:
+      - sales-company-network
+
+  users-service:
+    image: users-service
+    build:
+      context: ./users-service
+      dockerfile: Dockerfile
+    ports:
+      - "8200"
+    restart: always
+    #    depends_on:
+    #      - mysql1
+    #      - eureka-server
+    networks:
+      - sales-company-network
+
+volumes:
+  mysql1:
+
+networks:
+  sales-company-network:

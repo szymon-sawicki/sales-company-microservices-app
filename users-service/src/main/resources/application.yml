@@ -1,0 +1,32 @@
+server:
+  port: 8200
+
+spring:
+  application:
+    name: users-service
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://mysql1:3307/db_1?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: user
+    password: user1234
+
+    mail:
+      host: smtp.gmail.com
+      username: test@przygodyszymona.com
+      password:
+      port: 587
+      protocol: smtp
+      properties:
+        mail.smtps.auth: true
+        mail.smtp.starttls.enable: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
+  instance:
+    prefer-ip-address: true
