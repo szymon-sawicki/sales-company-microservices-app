@@ -1,15 +1,17 @@
-package domain.user;
+package com.salescompany.usersservice.domain.user;
 
-import domain.user.Type.Gender;
-import domain.user.Type.Role;
-import domain.user.dto.CreateUserResponseDto;
-import domain.user.dto.GetUserDto;
+import com.salescompany.usersservice.domain.user.Type.Gender;
+import com.salescompany.usersservice.domain.user.Type.Role;
+import com.salescompany.usersservice.domain.user.dto.CreateUserResponseDto;
+import com.salescompany.usersservice.domain.user.dto.GetUserDto;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
+@EqualsAndHashCode
 public class User {
     Long id;
     String username;

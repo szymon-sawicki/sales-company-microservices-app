@@ -1,4 +1,4 @@
-package domain.user;
+package com.salescompany.usersservice.domain.user;
 
 import java.util.function.Function;
 

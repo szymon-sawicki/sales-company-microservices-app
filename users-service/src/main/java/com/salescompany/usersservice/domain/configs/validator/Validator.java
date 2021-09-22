@@ -1,9 +1,6 @@
-package domain.configs;
-
-import domain.configs.validator.ValidatorException;
+package com.salescompany.usersservice.domain.configs.validator;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 

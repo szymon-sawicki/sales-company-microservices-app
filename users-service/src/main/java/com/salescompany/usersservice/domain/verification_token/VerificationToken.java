@@ -1,7 +1,7 @@
-package domain.verification_token;
+package com.salescompany.usersservice.domain.verification_token;
 
-import domain.user.User;
-import domain.user.UserUtils;
+import com.salescompany.usersservice.domain.user.User;
+import com.salescompany.usersservice.domain.user.UserUtils;
 import lombok.*;
 
 import java.time.LocalDateTime;

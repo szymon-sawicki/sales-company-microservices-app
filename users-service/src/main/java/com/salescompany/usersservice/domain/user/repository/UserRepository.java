@@ -1,6 +1,6 @@
-package domain.user.repository;
+package com.salescompany.usersservice.domain.user.repository;
 
-import domain.user.User;
+import com.salescompany.usersservice.domain.user.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

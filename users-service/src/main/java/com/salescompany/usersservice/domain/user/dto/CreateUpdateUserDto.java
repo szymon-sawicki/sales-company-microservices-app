@@ -1,11 +1,8 @@
-package domain.user.dto;
+package com.salescompany.usersservice.domain.user.dto;
 
-import domain.user.Type.Gender;
-import domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.salescompany.usersservice.domain.user.Type.Gender;
+import com.salescompany.usersservice.domain.user.User;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class CreateUpdateUserDto {
     private String username;
     private String password;

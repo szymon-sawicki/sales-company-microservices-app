@@ -1,7 +1,7 @@
-package domain.user.dto;
+package com.salescompany.usersservice.domain.user.dto;
 
-import domain.user.Type.Gender;
-import domain.user.Type.Role;
+import com.salescompany.usersservice.domain.user.Type.Gender;
+import com.salescompany.usersservice.domain.user.Type.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

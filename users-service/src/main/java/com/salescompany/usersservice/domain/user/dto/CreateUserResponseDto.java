@@ -1,4 +1,4 @@
-package domain.user.dto;
+package com.salescompany.usersservice.domain.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
