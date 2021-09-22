@@ -9,10 +9,13 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Builder
 @EqualsAndHashCode
+
 public class User {
+
     Long id;
     String username;
     String password;
