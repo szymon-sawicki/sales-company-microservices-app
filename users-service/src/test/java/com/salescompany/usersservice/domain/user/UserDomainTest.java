@@ -3,6 +3,8 @@ package com.salescompany.usersservice.domain.user;
 import com.salescompany.usersservice.domain.user.Type.Gender;
 import com.salescompany.usersservice.domain.user.Type.Role;
 import com.salescompany.usersservice.domain.user.dto.CreateUpdateUserDto;
+import com.salescompany.usersservice.domain.user.dto.GetUserDto;
+import com.salescompany.usersservice.infrastructure.persistence.entity.UserEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,8 @@ public class UserDomainTest {
     @DisplayName("when conversion to get user dto is correct")
     public void test1() {
 
+        var id = 1L;
+
         var firstName = "Andreas";
         var lastName = "Bottinger";
         var username = "andibotti";
@@ -29,28 +33,35 @@ public class UserDomainTest {
         var creationDate = LocalDateTime.now().minusDays(5);
         var enabled = true;
 
-        var createUpdateUserDto = CreateUpdateUserDto.builder()
+        var user = User.builder()
+                .id(id)
                 .username(username)
                 .password(password)
                 .mail(mail)
                 .firstName(firstName)
+                .role(role)
                 .lastName(lastName)
                 .birthDate(birthDate)
+                .creationDateTime(creationDate)
                 .gender(gender)
                 .build();
 
-        var expectedUser = User.builder()
+        var expectedDto = GetUserDto.builder()
+                .id(id)
                 .username(username)
                 .password(password)
                 .mail(mail)
                 .firstName(firstName)
+                .role(role)
                 .lastName(lastName)
                 .birthDate(birthDate)
+                .creationDateTime(creationDate)
                 .gender(gender)
                 .build();
 
-        assertThat(createUpdateUserDto.toUser())
-                .isEqualTo(expectedUser);
+
+        assertThat(user.toGetUserDto())
+                .isEqualTo(expectedDto);
 
     }
 
@@ -152,4 +163,54 @@ public class UserDomainTest {
                 .isEqualTo(expectedUser);
 
     }
+
+    @Test
+    @DisplayName("when conversion to user entity is correct")
+    public void test4() {
+
+        var id = 1L;
+
+        var firstName = "Andreas";
+        var lastName = "Bottinger";
+        var username = "andibotti";
+        var password = "AAndi12$.w";
+        var mail = "andiiii@gmail.com";
+        var role = Role.USER_CUSTOMER;
+        var gender = Gender.MALE;
+        var birthDate = LocalDate.now().minusYears(20);
+        var creationDate = LocalDateTime.now().minusDays(5);
+        var enabled = true;
+
+        var user = User.builder()
+                .id(id)
+                .username(username)
+                .password(password)
+                .mail(mail)
+                .firstName(firstName)
+                .role(role)
+                .lastName(lastName)
+                .birthDate(birthDate)
+                .creationDateTime(creationDate)
+                .gender(gender)
+                .build();
+
+        var expectedEntity = UserEntity.builder()
+                .id(id)
+                .username(username)
+                .password(password)
+                .mail(mail)
+                .firstName(firstName)
+                .role(role)
+                .lastName(lastName)
+                .birthDate(birthDate)
+                .creationDateTime(creationDate)
+                .gender(gender)
+                .build();
+
+
+        assertThat(user.toEntity())
+                .isEqualTo(expectedEntity);
+
+    }
+
 }

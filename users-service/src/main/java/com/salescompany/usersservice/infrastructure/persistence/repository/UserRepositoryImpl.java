@@ -3,9 +3,12 @@ package com.salescompany.usersservice.infrastructure.persistence.repository;
 import com.salescompany.usersservice.domain.user.User;
 import com.salescompany.usersservice.domain.user.repository.UserRepository;
 import com.salescompany.usersservice.infrastructure.persistence.dao.UserEntityDao;
+import com.salescompany.usersservice.infrastructure.persistence.entity.UserEntity;
+import com.salescompany.usersservice.infrastructure.persistence.exception.PersistenceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,75 +17,54 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final UserEntityDao userEntityDao;
 
-    // TODO
-
     @Override
     public Optional<User> findByUsername(String username) {
-        return Optional.empty();
+        return userEntityDao.findByUsername(username)
+                .map(UserEntity::toUser);
     }
 
     @Override
     public Optional<User> findByMail(String mail) {
-        return Optional.empty();
+        return userEntityDao.findByMail(mail)
+                .map(UserEntity::toUser);
     }
 
     @Override
-    public <S extends User> S save(S s) {
-        return null;
-    }
+    public Optional<User> delete(Long id) {
+        var userToDelete = userEntityDao.findById(id)
+                .map(UserEntity::toUser)
+                .orElseThrow(() -> new PersistenceException("cannot find user to delete"));
 
-    @Override
-    public <S extends User> Iterable<S> saveAll(Iterable<S> iterable) {
-        return null;
-    }
+        userEntityDao.deleteById(id);
 
-    @Override
-    public Optional<User> findById(Long aLong) {
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean existsById(Long aLong) {
-        return false;
-    }
-
-    @Override
-    public Iterable<User> findAll() {
-        return null;
-    }
-
-    @Override
-    public Iterable<User> findAllById(Iterable<Long> iterable) {
-        return null;
-    }
-
-    @Override
-    public long count() {
-        return 0;
-    }
-
-    @Override
-    public void deleteById(Long aLong) {
+        return Optional.of(userToDelete);
 
     }
 
     @Override
-    public void delete(User user) {
-
+    public Optional<User> findById(Long id) {
+        return userEntityDao.findById(id)
+                .map(UserEntity::toUser);
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends Long> iterable) {
-
+    public List<User> findAll() {
+        return userEntityDao.findAll().stream()
+                .map(UserEntity::toUser)
+                .toList();
     }
 
     @Override
-    public void deleteAll(Iterable<? extends User> iterable) {
-
+    public List<User> findAllById(List<Long> ids) {
+        return userEntityDao.findAllById(ids).stream()
+                .map(UserEntity::toUser)
+                .toList();
     }
 
     @Override
-    public void deleteAll() {
-
+    public Optional<User> add(User user) {
+        return Optional.of(userEntityDao.save(user.toEntity()))
+                .map(UserEntity::toUser);
     }
+
 }

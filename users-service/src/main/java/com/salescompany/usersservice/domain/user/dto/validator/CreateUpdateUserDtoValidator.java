@@ -32,9 +32,9 @@ public class CreateUpdateUserDtoValidator implements Validator<CreateUpdateUserD
         }
 
         if (createUpdateUserDto.getUsername() == null) {
-            errors.put("last name", "is null");
+            errors.put("username", "is null");
         } else if (!createUpdateUserDto.getUsername().matches("[\\w\\s\\-'.]{5,20}+")) {
-            errors.put("last name", "have wrong format");
+            errors.put("username", "have wrong format");
         }
 
         if (createUpdateUserDto.getPassword() == null) {

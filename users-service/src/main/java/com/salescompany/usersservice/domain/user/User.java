@@ -4,6 +4,7 @@ import com.salescompany.usersservice.domain.user.Type.Gender;
 import com.salescompany.usersservice.domain.user.Type.Role;
 import com.salescompany.usersservice.domain.user.dto.CreateUserResponseDto;
 import com.salescompany.usersservice.domain.user.dto.GetUserDto;
+import com.salescompany.usersservice.infrastructure.persistence.entity.UserEntity;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 
@@ -64,11 +65,42 @@ public class User {
                 .creationDateTime(newTime)
                 .build();
     }
+
+    public User withRole(Role newRole) {
+        return User.builder()
+                .id(id)
+                .username(username)
+                .password(password)
+                .mail(mail)
+                .firstName(firstName)
+                .lastName(lastName)
+                .birthDate(birthDate)
+                .gender(gender)
+                .role(newRole)
+                .creationDateTime(creationDateTime)
+                .build();
+    }
+
     public User withPassword(String newPassword) {
         return User.builder()
                 .id(id)
                 .username(username)
                 .password(newPassword)
+                .mail(mail)
+                .firstName(firstName)
+                .lastName(lastName)
+                .birthDate(birthDate)
+                .gender(gender)
+                .role(role)
+                .creationDateTime(creationDateTime)
+                .build();
+    }
+
+    public UserEntity toEntity() {
+        return UserEntity.builder()
+                .id(id)
+                .username(username)
+                .password(password)
                 .mail(mail)
                 .firstName(firstName)
                 .lastName(lastName)
