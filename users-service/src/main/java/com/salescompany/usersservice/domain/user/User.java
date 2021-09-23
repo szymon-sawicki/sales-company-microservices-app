@@ -29,6 +29,10 @@ public class User {
     LocalDateTime creationDateTime;
     boolean enabled;
 
+    public void activate() {
+        enabled=true;
+    }
+
     public GetUserDto toGetUserDto() {
         return GetUserDto.builder()
                 .id(id)
