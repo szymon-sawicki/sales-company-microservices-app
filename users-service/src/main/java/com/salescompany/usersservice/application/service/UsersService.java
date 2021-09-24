@@ -117,5 +117,43 @@ public class UsersService {
                 .orElseThrow(() -> new UsersServiceException("cannot find user with given id"));
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public GetUserDto update(Long id, CreateUpdateUserDto createUpdateUserDto) {
+        if (id == null) {
+            throw new UsersServiceException("id is null");
+        }
+        if (id <= 0) {
+            throw new UsersServiceException("id is 0 or negative");
+        }
+        Validator.validate(new CreateUpdateUserDtoValidator(),createUpdateUserDto);
+
+        var userFromDb = userRepository.findById(id)
+                .orElseThrow(() -> new UsersServiceException("user with given id doesn't exist"));
+
+        var userToUpdate = createUpdateUserDto.toUser()
+                .withId(UserUtils.toId.apply(userFromDb))
+                .withRole(UserUtils.toRole.apply(userFromDb))
+                .withCreationDateTime(UserUtils.toCreationDateTime.apply(userFromDb));
+
+        return userRepository.add(userToUpdate)
+                .orElseThrow(() -> new UsersServiceException("cannot update user"))
+                .toGetUserDto();
+    }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public GetUserDto delete(Long id) {
+        if (id == null) {
+            throw new UsersServiceException("id is null");
+        }
+        if (id <= 0) {
+            throw new UsersServiceException("id is 0 or negative");
+        }
+
+        return userRepository.delete(id)
+                .orElseThrow(() -> new UsersServiceException("cannot delete user"))
+                .toGetUserDto();
+
+    }
+
 
 }

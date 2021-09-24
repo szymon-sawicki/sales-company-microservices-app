@@ -85,6 +85,21 @@ public class User {
                 .build();
     }
 
+    public User withId(Long newId) {
+        return User.builder()
+                .id(newId)
+                .username(username)
+                .password(password)
+                .mail(mail)
+                .firstName(firstName)
+                .lastName(lastName)
+                .birthDate(birthDate)
+                .gender(gender)
+                .role(role)
+                .creationDateTime(creationDateTime)
+                .build();
+    }
+
     public User withPassword(String newPassword) {
         return User.builder()
                 .id(id)

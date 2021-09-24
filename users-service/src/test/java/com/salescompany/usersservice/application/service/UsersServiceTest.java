@@ -208,7 +208,7 @@ public class UsersServiceTest {
         when(verificationTokenRepository.findByToken(token))
                 .thenReturn(Optional.of(tokenToReturn));
 
-        org.junit.jupiter.api.Assertions.assertDoesNotThrow(()->usersService.activateUser(token));
+        org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> usersService.activateUser(token));
 
     }
 
@@ -327,7 +327,7 @@ public class UsersServiceTest {
         when(userRepository.findByMail(mail))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() ->usersService.findByMail(mail))
+        assertThatThrownBy(() -> usersService.findByMail(mail))
                 .isInstanceOf(UsersServiceException.class)
                 .hasMessageContaining("cannot find user with given mail");
 
@@ -339,7 +339,7 @@ public class UsersServiceTest {
 
         var mail = "wrong.mail";
 
-        assertThatThrownBy(() ->usersService.findByMail(mail))
+        assertThatThrownBy(() -> usersService.findByMail(mail))
                 .isInstanceOf(UsersServiceException.class)
                 .hasMessageContaining("mail have wrong format");
 
@@ -400,7 +400,7 @@ public class UsersServiceTest {
         when(userRepository.findByUsername(username))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() ->usersService.findByUsername(username))
+        assertThatThrownBy(() -> usersService.findByUsername(username))
                 .isInstanceOf(UsersServiceException.class)
                 .hasMessageContaining("cannot find user with given username");
 
@@ -412,7 +412,7 @@ public class UsersServiceTest {
 
         var username = "user$%name";
 
-        assertThatThrownBy(() ->usersService.findByUsername(username))
+        assertThatThrownBy(() -> usersService.findByUsername(username))
                 .isInstanceOf(UsersServiceException.class)
                 .hasMessageContaining("username have wrong format");
 
@@ -473,7 +473,7 @@ public class UsersServiceTest {
         when(userRepository.findById(id))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(()->usersService.findById(id))
+        assertThatThrownBy(() -> usersService.findById(id))
                 .isInstanceOf(UsersServiceException.class)
                 .hasMessageContaining("cannot find user with given id");
 
@@ -483,7 +483,7 @@ public class UsersServiceTest {
     @DisplayName("when searched id is null")
     public void test15() {
 
-        assertThatThrownBy(()->usersService.findById(null))
+        assertThatThrownBy(() -> usersService.findById(null))
                 .isInstanceOf(UsersServiceException.class)
                 .hasMessageContaining("id is null");
 
@@ -493,12 +493,178 @@ public class UsersServiceTest {
     @DisplayName("when searched id is negative")
     public void test16() {
 
-        assertThatThrownBy(()->usersService.findById(-5L))
+        assertThatThrownBy(() -> usersService.findById(-5L))
                 .isInstanceOf(UsersServiceException.class)
                 .hasMessageContaining("id is 0 or negative");
 
     }
 
+    @Test
+    @DisplayName("when updating user is correct")
+    public void test17() {
+        var username = "alfonso123";
+        var firstName = "Alfonso";
+        var lastName = "Banani";
+        var password = "banena12A$";
+        var mail = "banani@banani.com";
+        var birthDate = LocalDate.now().minusYears(20);
+        var gender = Gender.MALE;
 
+        var idToFind = 2L;
+        var role = Role.USER_CUSTOMER;
+
+        var userToUpdate = CreateUpdateUserDto.builder()
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .passwordConfirmation(password)
+                .mail(mail)
+                .birthDate(birthDate)
+                .gender(gender)
+                .build();
+
+        var userFromDb = User.builder()
+                .id(idToFind)
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .role(role)
+                .mail(mail)
+                .birthDate(birthDate)
+                .gender(gender)
+                .build();
+
+        var expectedDto = GetUserDto.builder()
+                .id(idToFind)
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .role(role)
+                .mail(mail)
+                .birthDate(birthDate)
+                .gender(gender)
+                .build();
+
+        when(userRepository.findById(idToFind))
+                .thenReturn(Optional.of(User.builder().id(idToFind).role(role).build()));
+
+        when(userRepository.add(any()))
+                .thenReturn(Optional.of(userFromDb));
+
+        assertThat(usersService.update(idToFind, userToUpdate))
+                .isEqualTo(expectedDto);
+    }
+
+    @Test
+    @DisplayName("when user with given id doesn't exist")
+    public void test18() {
+
+        var username = "alfonso123";
+        var firstName = "Alfonso";
+        var lastName = "Banani";
+        var password = "banena12A$";
+        var mail = "banani@banani.com";
+        var birthDate = LocalDate.now().minusYears(20);
+        var gender = Gender.MALE;
+        var id = 3L;
+
+
+        var userToUpdate = CreateUpdateUserDto.builder()
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .passwordConfirmation(password)
+                .mail(mail)
+                .birthDate(birthDate)
+                .gender(gender)
+                .build();
+
+        when(userRepository.findById(id))
+                .thenReturn(Optional.empty());
+
+
+        assertThatThrownBy(() -> usersService.update(id, userToUpdate))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("user with given id doesn't exist");
+    }
+
+    @Test
+    @DisplayName("when user is deleted successfully")
+    public void test19() {
+
+        var username = "alfonso123";
+        var firstName = "Alfonso";
+        var lastName = "Banani";
+        var password = "banena12A$";
+        var mail = "banani@banani.com";
+        var birthDate = LocalDate.now().minusYears(20);
+        var gender = Gender.MALE;
+        var id = 3L;
+        var role = Role.USER_CUSTOMER;
+        var creationDateTime = LocalDateTime.now().minusDays(20);
+
+
+        var user = User.builder()
+                .id(id)
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .mail(mail)
+                .birthDate(birthDate)
+                .role(role)
+                .creationDateTime(creationDateTime)
+                .gender(gender)
+                .build();
+
+        var expectedDto = GetUserDto.builder()
+                .id(id)
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .mail(mail)
+                .birthDate(birthDate)
+                .role(role)
+                .creationDateTime(creationDateTime)
+                .gender(gender)
+                .build();
+
+        when(userRepository.delete(id))
+                .thenReturn(Optional.of(user));
+
+        assertThat(usersService.delete(id))
+                .isEqualTo(expectedDto);
+
+    }
+
+    @Test
+    @DisplayName("when user with given id doesn't exist")
+    public void test20() {
+
+        var id = 5L;
+
+        when(userRepository.delete(id))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> usersService.delete(id))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("cannot delete user");
+
+    }
+
+    @Test
+    @DisplayName("when id is null")
+    public void test21() {
+
+        assertThatThrownBy(() -> usersService.delete(null))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("id is null");
+
+    }
 
 }

@@ -29,3 +29,10 @@ System for sales management in company with many shops and warehouses.
 - orders service  
 - returnings service  
 
+### TODO
+
+####Users Service
+
+- write more tests of repository  
+- finish and test controller  
+- Add address domain class and include it to user  
