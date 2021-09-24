@@ -8,6 +8,7 @@ import com.salescompany.usersservice.domain.user.User;
 import com.salescompany.usersservice.domain.user.UserUtils;
 import com.salescompany.usersservice.domain.user.dto.CreateUpdateUserDto;
 import com.salescompany.usersservice.domain.user.dto.CreateUserResponseDto;
+import com.salescompany.usersservice.domain.user.dto.GetUserDto;
 import com.salescompany.usersservice.domain.user.dto.validator.CreateUpdateUserDtoValidator;
 import com.salescompany.usersservice.domain.user.repository.UserRepository;
 import com.salescompany.usersservice.domain.verification_token.VerificationToken;
@@ -75,6 +76,45 @@ public class UsersService {
                                     .orElseThrow(() -> new UsersServiceException("cannot activate user"));
                         }))
                 .orElseThrow(() -> new UsersServiceException("User activation failed"));
+    }
+
+    public GetUserDto findByMail(String mail) {
+        if (mail == null) {
+            throw new UsersServiceException("mail is null");
+        }
+        if (!mail.matches("[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")) {
+            throw new UsersServiceException("mail have wrong format");
+        }
+
+        return userRepository.findByMail(mail)
+                .map(User::toGetUserDto)
+                .orElseThrow(() -> new UsersServiceException("cannot find user with given mail"));
+    }
+
+    public GetUserDto findByUsername(String username) {
+        if (username == null) {
+            throw new UsersServiceException("username is null");
+        }
+        if (!username.matches("[\\w\\s\\-'.]{5,20}+")) {
+            throw new UsersServiceException("username have wrong format");
+        }
+
+        return userRepository.findByUsername(username)
+                .map(User::toGetUserDto)
+                .orElseThrow(() -> new UsersServiceException("cannot find user with given username"));
+    }
+
+    public GetUserDto findById(Long id) {
+        if (id == null) {
+            throw new UsersServiceException("id is null");
+        }
+        if (id <= 0) {
+            throw new UsersServiceException("id is 0 or negative");
+        }
+
+        return userRepository.findById(id)
+                .map(User::toGetUserDto)
+                .orElseThrow(() -> new UsersServiceException("cannot find user with given id"));
     }
 
 

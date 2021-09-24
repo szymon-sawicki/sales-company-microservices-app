@@ -7,14 +7,13 @@ import com.salescompany.usersservice.domain.user.Type.Role;
 import com.salescompany.usersservice.domain.user.User;
 import com.salescompany.usersservice.domain.user.dto.CreateUpdateUserDto;
 import com.salescompany.usersservice.domain.user.dto.CreateUserResponseDto;
+import com.salescompany.usersservice.domain.user.dto.GetUserDto;
 import com.salescompany.usersservice.domain.user.repository.UserRepository;
 import com.salescompany.usersservice.domain.verification_token.VerificationToken;
 import com.salescompany.usersservice.domain.verification_token.repository.VerificationTokenRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,8 +25,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 public class UsersServiceTest {
@@ -210,5 +211,294 @@ public class UsersServiceTest {
         org.junit.jupiter.api.Assertions.assertDoesNotThrow(()->usersService.activateUser(token));
 
     }
+
+    @Test
+    @DisplayName("when token is not correct")
+    public void test5() {
+
+        when(verificationTokenRepository.findByToken(any()))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> usersService.activateUser("sdvdfbfgbdfer"))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("User activation failed");
+    }
+
+    @Test
+    @DisplayName("when token is expired")
+    public void test6() {
+        var username = "alfonso123";
+        var firstName = "Alfonso";
+        var lastName = "Banani";
+        var password = "banena12A$";
+        var mail = "banani@banani.com";
+        var birthDate = LocalDate.now().minusYears(20);
+        var gender = Gender.MALE;
+
+        var id = 2L;
+
+        var user = User.builder()
+                .id(id)
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .role(Role.USER_CUSTOMER)
+                .mail(mail)
+                .birthDate(birthDate)
+                .gender(gender)
+                .build();
+
+        when(userRepository.add(user))
+                .thenReturn(Optional.of(user));
+
+        when(userRepository.findById(id))
+                .thenReturn(Optional.of(user));
+
+        var token = "ascsdvdfbfgt565";
+
+        var tokenToReturn = VerificationToken.builder()
+                .id(id)
+                .user(user)
+                .token(token)
+                .dateTime(LocalDateTime.now().minusMinutes(10))
+                .build();
+
+        when(verificationTokenRepository.findByToken(token))
+                .thenReturn(Optional.of(tokenToReturn));
+
+        assertThatThrownBy(() -> usersService.activateUser(token))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("User activation failed");
+    }
+
+    @Test
+    @DisplayName("when user is searched by e-mail and exists in database")
+    public void test7() {
+
+        var username = "alfonso123";
+        var firstName = "Alfonso";
+        var lastName = "Banani";
+        var password = "banena12A$";
+        var mail = "banani@banani.com";
+        var birthDate = LocalDate.now().minusYears(20);
+        var gender = Gender.MALE;
+
+        var id = 2L;
+
+        var user = User.builder()
+                .id(id)
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .role(Role.USER_CUSTOMER)
+                .mail(mail)
+                .birthDate(birthDate)
+                .gender(gender)
+                .build();
+
+        var expectedUserDto = GetUserDto.builder()
+                .id(id)
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .role(Role.USER_CUSTOMER)
+                .mail(mail)
+                .birthDate(birthDate)
+                .gender(gender)
+                .build();
+
+        when(userRepository.findByMail(mail))
+                .thenReturn(Optional.of(user));
+
+        assertThat(usersService.findByMail(mail))
+                .isEqualTo(expectedUserDto);
+
+    }
+
+    @Test
+    @DisplayName("when user with given mail doesn't exist in database")
+    public void test8() {
+
+        var mail = "search@mail.com";
+
+        when(userRepository.findByMail(mail))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() ->usersService.findByMail(mail))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("cannot find user with given mail");
+
+    }
+
+    @Test
+    @DisplayName("when mail have wrong format")
+    public void test9() {
+
+        var mail = "wrong.mail";
+
+        assertThatThrownBy(() ->usersService.findByMail(mail))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("mail have wrong format");
+
+    }
+
+    @Test
+    @DisplayName("when user is searched by username and exists in database")
+    public void test10() {
+
+        var username = "alfonso123";
+        var firstName = "Alfonso";
+        var lastName = "Banani";
+        var password = "banena12A$";
+        var mail = "banani@banani.com";
+        var birthDate = LocalDate.now().minusYears(20);
+        var gender = Gender.MALE;
+
+        var id = 2L;
+
+        var user = User.builder()
+                .id(id)
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .role(Role.USER_CUSTOMER)
+                .mail(mail)
+                .birthDate(birthDate)
+                .gender(gender)
+                .build();
+
+        var expectedUserDto = GetUserDto.builder()
+                .id(id)
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .role(Role.USER_CUSTOMER)
+                .mail(mail)
+                .birthDate(birthDate)
+                .gender(gender)
+                .build();
+
+        when(userRepository.findByUsername(username))
+                .thenReturn(Optional.of(user));
+
+        assertThat(usersService.findByUsername(username))
+                .isEqualTo(expectedUserDto);
+
+    }
+
+    @Test
+    @DisplayName("when user with given username doesn't exist in database")
+    public void test11() {
+
+        var username = "username";
+
+        when(userRepository.findByUsername(username))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() ->usersService.findByUsername(username))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("cannot find user with given username");
+
+    }
+
+    @Test
+    @DisplayName("when username have wrong format")
+    public void test12() {
+
+        var username = "user$%name";
+
+        assertThatThrownBy(() ->usersService.findByUsername(username))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("username have wrong format");
+
+    }
+
+    @Test
+    @DisplayName("when user is searched by id and exists in database")
+    public void test13() {
+
+        var username = "alfonso123";
+        var firstName = "Alfonso";
+        var lastName = "Banani";
+        var password = "banena12A$";
+        var mail = "banani@banani.com";
+        var birthDate = LocalDate.now().minusYears(20);
+        var gender = Gender.MALE;
+
+        var id = 2L;
+
+        var user = User.builder()
+                .id(id)
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .role(Role.USER_CUSTOMER)
+                .mail(mail)
+                .birthDate(birthDate)
+                .gender(gender)
+                .build();
+
+        var expectedUserDto = GetUserDto.builder()
+                .id(id)
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .role(Role.USER_CUSTOMER)
+                .mail(mail)
+                .birthDate(birthDate)
+                .gender(gender)
+                .build();
+
+        when(userRepository.findById(id))
+                .thenReturn(Optional.of(user));
+
+        assertThat(usersService.findById(id))
+                .isEqualTo(expectedUserDto);
+
+    }
+
+    @Test
+    @DisplayName("when user is searched by id and doesn't exist in db")
+    public void test14() {
+
+        var id = 15L;
+
+        when(userRepository.findById(id))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(()->usersService.findById(id))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("cannot find user with given id");
+
+    }
+
+    @Test
+    @DisplayName("when searched id is null")
+    public void test15() {
+
+        assertThatThrownBy(()->usersService.findById(null))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("id is null");
+
+    }
+
+    @Test
+    @DisplayName("when searched id is negative")
+    public void test16() {
+
+        assertThatThrownBy(()->usersService.findById(-5L))
+                .isInstanceOf(UsersServiceException.class)
+                .hasMessageContaining("id is 0 or negative");
+
+    }
+
+
 
 }

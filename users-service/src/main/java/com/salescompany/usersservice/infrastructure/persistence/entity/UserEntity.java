@@ -7,6 +7,7 @@ import com.salescompany.usersservice.infrastructure.persistence.entity.base.Base
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Entity;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Table(name = "users")
+@ToString
 public class UserEntity extends BaseEntity {
 
     private String username;

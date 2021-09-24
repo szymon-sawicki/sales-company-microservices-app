@@ -1,9 +1,6 @@
 package com.salescompany.usersservice.infrastructure.persistence.entity.base;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.GeneratedValue;
@@ -14,6 +11,7 @@ import javax.persistence.MappedSuperclass;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
+@Getter
 @SuperBuilder
 @MappedSuperclass
 public class BaseEntity {

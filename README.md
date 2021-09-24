@@ -10,8 +10,22 @@ System for sales management in company with many shops and warehouses.
 - Spring Boot  
 - Spring Data JPA (database - MySQL)  
 - Spring Web  
-- Spring Cloud  
-- Netflix Eureka Server  
+- Spring Cloud Gateway Api
+- Spring Eureka   
 - Spring Security  
 - Lombok  
+
+### Implemented services
+
+- Eureka Server  
+- Users Service (~80% done)
+
+### Planned services  
+
+- API Gateway (with Spring Cloud)  
+- products service
+- shops service  
+- warehouses service 
+- orders service  
+- returnings service  
 

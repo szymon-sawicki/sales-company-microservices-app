@@ -54,6 +54,10 @@ public class UsersServiceApplication {
         SpringApplication.run(UsersServiceApplication.class, args);
 
 
+        /*
+        TODO - w którym serwisie ogarniamy statystyki zakupów klientów ?
+         */
+
     }
 
 
