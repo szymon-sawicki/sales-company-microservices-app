@@ -1,0 +1,22 @@
+server:
+  port: 8300
+
+spring:
+  application:
+    name: products-service
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://mysql2:3308/db_2?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: user
+    password: user1234
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
+  instance:
+    prefer-ip-address: true

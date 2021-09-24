@@ -13,9 +13,26 @@ services:
       MYSQL_PASSWORD: user1234
       MYSQL_TCP_PORT: 3307
     ports:
-      - 3307:3307
+      - "3307:3307"
     expose:
       - 3307
+    networks:
+      - sales-company-network
+
+  mysql2:
+    image: mysql:latest
+    volumes:
+      - mysql2:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_2
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user1234
+      MYSQL_TCP_PORT: 3308
+    ports:
+      - "3308:3308"
+    expose:
+      - 3308
     networks:
       - sales-company-network
 
@@ -39,14 +56,23 @@ services:
     ports:
       - "8200"
     restart: always
-    #    depends_on:
-    #      - mysql1
-    #      - eureka-server
+    networks:
+      - sales-company-network
+
+  products-service:
+    image: products-service
+    build:
+      context: ./products-service
+      dockerfile: Dockerfile
+    ports:
+      - "8300"
+    restart: always
     networks:
       - sales-company-network
 
 volumes:
   mysql1:
+  mysql2:
 
 networks:
   sales-company-network:
