@@ -2,7 +2,7 @@ package com.salescompany.productsservice.domain.product.dto;
 
 import com.salescompany.productsservice.domain.producer.Producer;
 import com.salescompany.productsservice.domain.product.type.Category;
-import com.salescompany.productsservice.domain.warranty_strategy.WarrantyPolicy;
+import com.salescompany.productsservice.domain.warranty_policy.WarrantyPolicy;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,10 +1,9 @@
 package com.salescompany.productsservice.domain.producer.dto;
 
 import com.salescompany.productsservice.domain.address.dto.CreateUpdateAddressDto;
-import com.salescompany.productsservice.domain.address.dto.GetAddressDto;
 import com.salescompany.productsservice.domain.producer.Producer;
 import com.salescompany.productsservice.domain.producer.type.Industry;
-import com.salescompany.productsservice.domain.warranty_strategy.dto.GetWarrantyPolicyDto;
+import com.salescompany.productsservice.domain.warranty_policy.dto.GetWarrantyPolicyDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

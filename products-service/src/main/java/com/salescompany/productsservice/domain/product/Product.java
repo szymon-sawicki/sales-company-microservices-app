@@ -1,14 +1,16 @@
 package com.salescompany.productsservice.domain.product;
 
 import com.salescompany.productsservice.domain.product.dto.GetProductDto;
-import com.salescompany.productsservice.domain.warranty_strategy.WarrantyPolicy;
+import com.salescompany.productsservice.domain.warranty_policy.WarrantyPolicy;
 import com.salescompany.productsservice.domain.producer.Producer;
 import com.salescompany.productsservice.domain.product.type.Category;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
 @Builder
+@EqualsAndHashCode
 public class Product {
     Long id;
     String name;

@@ -1,6 +1,6 @@
-package com.salescompany.productsservice.domain.warranty_strategy.dto;
+package com.salescompany.productsservice.domain.warranty_policy.dto;
 
-import com.salescompany.productsservice.domain.warranty_strategy.type.ServiceType;
+import com.salescompany.productsservice.domain.warranty_policy.type.ServiceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

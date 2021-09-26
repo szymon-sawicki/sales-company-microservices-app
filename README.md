@@ -19,19 +19,26 @@ System for sales management in company with many shops and warehouses.
 
 - Eureka Server  
 - Users Service (~80% done)
+- Products Service (~30% done)
 
 ### Planned services  
 
 - API Gateway (with Spring Cloud)  
-- products service
 - shops service  
 - warehouses service 
 - orders service  
-- returnings service  
+- returning service  
 
 ### TODO
 
-####Users Service
+### Products service  
+
+- write dao's, services, controllers  
+- validators of domain classes (+ unit tests of them)  
+- !! UNIT TESTS !!  
+
+
+###Users Service
 
 - write more tests of repository  
 - finish and test controller  
