@@ -4,6 +4,8 @@ import com.salescompany.productsservice.domain.address.Address;
 import com.salescompany.productsservice.domain.producer.dto.GetProducerDto;
 import com.salescompany.productsservice.domain.warranty_policy.WarrantyPolicy;
 import com.salescompany.productsservice.domain.producer.type.Industry;
+import com.salescompany.productsservice.infrastructure.persistence.entity.ProducerEntity;
+import com.salescompany.productsservice.infrastructure.persistence.entity.ProductEntity;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 
@@ -26,6 +28,16 @@ public class Producer {
                 .industry(industry)
                 .address(address)
                 .warrantyPolicies(warrantyPolicies)
+                .build();
+    }
+
+    public ProducerEntity toEntity() {
+        return ProducerEntity.builder()
+                .id(id)
+                .name(name)
+                .industry(industry)
+                .addressEntity(address.toEntity())
+                .warrantyPolicies(warrantyPolicies.stream().map(WarrantyPolicy::toEntity).toList())
                 .build();
     }
 }

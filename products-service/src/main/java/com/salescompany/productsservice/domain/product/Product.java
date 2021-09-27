@@ -4,6 +4,7 @@ import com.salescompany.productsservice.domain.product.dto.GetProductDto;
 import com.salescompany.productsservice.domain.warranty_policy.WarrantyPolicy;
 import com.salescompany.productsservice.domain.producer.Producer;
 import com.salescompany.productsservice.domain.product.type.Category;
+import com.salescompany.productsservice.infrastructure.persistence.entity.ProductEntity;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 
@@ -27,6 +28,17 @@ public class Product {
                 .category(category)
                 .producer(producer)
                 .warrantyPolicy(warrantyPolicy)
+                .build();
+    }
+
+    public ProductEntity toEntity() {
+        return ProductEntity.builder()
+                .id(id)
+                .name(name)
+                .price(price)
+                .category(category)
+                .producerEntity(producer.toEntity())
+                .warrantyPolicyEntity(warrantyPolicy.toEntity())
                 .build();
     }
 
