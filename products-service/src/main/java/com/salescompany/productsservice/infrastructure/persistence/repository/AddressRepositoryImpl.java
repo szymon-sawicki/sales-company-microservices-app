@@ -47,7 +47,16 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
-    public List<Address> findAllById(List<Long> longs) {
-        return null;
+    public List<Address> findAllById(List<Long> ids) {
+        return addressEntityDao.findAllById(ids)
+                .stream()
+                .map(AddressEntity::toAddress)
+                .toList();
+    }
+
+    @Override
+    public Optional<Address> findByAddress(String street, String houseNumber, String city, String zipCode) {
+        return addressEntityDao.findByStreetAndHouseNumberAndCityAndZipCode(street,houseNumber,city,zipCode)
+                .map(AddressEntity::toAddress);
     }
 }

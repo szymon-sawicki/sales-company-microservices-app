@@ -31,6 +31,17 @@ public class Product {
                 .build();
     }
 
+    public Product withProducer(Producer newProducer) {
+        return Product.builder()
+                .id(id)
+                .name(name)
+                .price(price)
+                .category(category)
+                .producer(newProducer)
+                .warrantyPolicy(warrantyPolicy)
+                .build();
+    }
+
     public ProductEntity toEntity() {
         return ProductEntity.builder()
                 .id(id)

@@ -57,4 +57,9 @@ public class ProducerRepositoryImpl implements ProducerRepository {
                 .toList();
     }
 
+    @Override
+    public Optional<Producer> findByName(String name) {
+        return producerEntityDao.findByName(name)
+                .map(ProducerEntity::toProducer);
+    }
 }

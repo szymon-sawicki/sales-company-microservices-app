@@ -4,6 +4,7 @@ import com.salescompany.productsservice.domain.address.Address;
 import com.salescompany.productsservice.domain.producer.dto.GetProducerDto;
 import com.salescompany.productsservice.domain.warranty_policy.WarrantyPolicy;
 import com.salescompany.productsservice.domain.producer.type.Industry;
+import com.salescompany.productsservice.domain.warranty_policy.dto.GetWarrantyPolicyDto;
 import com.salescompany.productsservice.infrastructure.persistence.entity.ProducerEntity;
 import com.salescompany.productsservice.infrastructure.persistence.entity.ProductEntity;
 import lombok.Builder;
@@ -21,13 +22,23 @@ public class Producer {
     // list of warranty strategies accepted by that producer
     List<WarrantyPolicy> warrantyPolicies;
 
+    public Producer withAddress(Address newAddress) {
+        return Producer.builder()
+                .id(id)
+                .name(name)
+                .industry(industry)
+                .address(newAddress)
+                .warrantyPolicies(warrantyPolicies)
+                .build();
+    }
+
     public GetProducerDto toGetProducerDto() {
         return GetProducerDto.builder()
                 .id(id)
                 .name(name)
                 .industry(industry)
                 .address(address)
-                .warrantyPolicies(warrantyPolicies)
+                .warrantyPolicies(warrantyPolicies.stream().map(WarrantyPolicy::toGetWarrantyPolicyDto).toList())
                 .build();
     }
 
