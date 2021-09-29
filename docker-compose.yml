@@ -48,10 +48,10 @@ services:
     networks:
       - sales-company-network
 
-  users-service:
-    image: users-service
+  user-service:
+    image: user-service
     build:
-      context: ./users-service
+      context: ./user-service
       dockerfile: Dockerfile
     ports:
       - "8200"
@@ -59,16 +59,28 @@ services:
     networks:
       - sales-company-network
 
-  products-service:
-    image: products-service
+  product-service:
+    image: product-service
     build:
-      context: ./products-service
+      context: ./product-service
       dockerfile: Dockerfile
     ports:
       - "8300"
     restart: always
     networks:
       - sales-company-network
+
+  api-gateway-nowe:
+    image: api-gateway
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - sales-company-network
+
 
 volumes:
   mysql1:

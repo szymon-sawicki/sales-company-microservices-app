@@ -1,4 +1,4 @@
 FROM openjdk:16
 EXPOSE 8200
-ADD ./target/users-service.jar users-service.jar
-ENTRYPOINT ["java", "-jar", "users-service.jar"]
+ADD ./target/user-service.jar user-service.jar
+ENTRYPOINT ["java", "-jar", "user-service.jar"]

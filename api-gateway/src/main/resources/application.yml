@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: author-service
+          uri: http://author-service:8100
+          predicates:
+            - Path=/authors/**
+          filters:
+            # Np ponizszy filter dodaje do kazdego request naglowek ktory tutaj przekazesz
+            - AddRequestHeader=X-Request-red, blue
+        - id: book-service
+          uri: http://book-service:8200
+          predicates:
+            - Path=/books/**
+
+# Dorzucamy loggery od api gateway
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
+  instance:
+    prefer-ip-address: true
