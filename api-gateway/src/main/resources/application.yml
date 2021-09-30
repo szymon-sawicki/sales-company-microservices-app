@@ -8,17 +8,17 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: author-service
-          uri: http://author-service:8100
+        - id: user-service
+          uri: http://user-service:8200
           predicates:
-            - Path=/authors/**
+            - Path=/users/**
           filters:
             # Np ponizszy filter dodaje do kazdego request naglowek ktory tutaj przekazesz
             - AddRequestHeader=X-Request-red, blue
-        - id: book-service
-          uri: http://book-service:8200
+        - id: product-service
+          uri: http://book-service:8300
           predicates:
-            - Path=/books/**
+            - Path=/products/**
 
 # Dorzucamy loggery od api gateway
 logging:
