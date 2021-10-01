@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,6 +28,10 @@ public class AddressEntity extends BaseEntity {
 
     @Column(name = "zip_code")
     private String zipCode;
+
+    @OneToOne
+    @JoinColumn(name = "id")
+    ProducerEntity producer;
 
 
     public Address toAddress() {

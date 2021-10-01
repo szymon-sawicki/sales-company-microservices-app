@@ -26,8 +26,8 @@ public class Product {
                 .name(name)
                 .price(price)
                 .category(category)
-                .producer(producer)
-                .warrantyPolicy(warrantyPolicy)
+                .producer(producer.toGetProducerDto())
+                .warrantyPolicy(warrantyPolicy.toGetWarrantyPolicyDto())
                 .build();
     }
 
@@ -48,7 +48,7 @@ public class Product {
                 .name(name)
                 .price(price)
                 .category(category)
-                .producerEntity(producer.toEntity())
+                .producer(producer.toEntity())
                 .warrantyPolicyEntity(warrantyPolicy.toEntity())
                 .build();
     }

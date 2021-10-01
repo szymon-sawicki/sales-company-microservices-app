@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductsService {
@@ -44,6 +46,14 @@ public class ProductsService {
         return productRepository.add(productToInsert)
                 .map(Product::toGetProductDto)
                 .orElseThrow(() -> new ProductsServiceException("cannot add new product"));
+
+    }
+
+    public List<GetProductDto> getProductsByIds(List<Long> ids) {
+
+        return productRepository.findAllById(ids)
+                .stream().map(Product::toGetProductDto)
+                .toList();
 
     }
 

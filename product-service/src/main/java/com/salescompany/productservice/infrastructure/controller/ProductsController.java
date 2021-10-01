@@ -7,6 +7,9 @@ import com.salescompany.productservice.infrastructure.controller.dto.ResponseDat
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/producers")
@@ -24,5 +27,12 @@ public class ProductsController {
     public ResponseDataDto<GetProductDto> getProductById(@PathVariable Long id) {
         return ResponseDataDto.toResponse(productsService.findById(id));
     }
+
+    @GetMapping("/byId")
+    public List<GetProductDto> getProductsByIds(@RequestParam String ids) {
+        var idss = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
+        return productsService.getProductsByIds(idss);
+    }
+
 
 }

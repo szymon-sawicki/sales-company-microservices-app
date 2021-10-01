@@ -24,7 +24,7 @@ public class UsersController {
     }
 
     @GetMapping("/mail/{mail}")
-    public ResponseDataDto<Getcd..UserDto> findByMail(@PathVariable String mail) {
+    public ResponseDataDto<GetUserDto> findByMail(@PathVariable String mail) {
         return toResponse(usersService.findByMail(mail));
     }
 

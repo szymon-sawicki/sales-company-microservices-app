@@ -1,8 +1,8 @@
 package com.salescompany.productservice.domain.product.dto;
 
-import com.salescompany.productservice.domain.producer.Producer;
+import com.salescompany.productservice.domain.producer.dto.GetProducerDto;
 import com.salescompany.productservice.domain.product.type.Category;
-import com.salescompany.productservice.domain.warranty_policy.WarrantyPolicy;
+import com.salescompany.productservice.domain.warranty_policy.dto.GetWarrantyPolicyDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +19,6 @@ public class GetProductDto {
     private String name;
     private BigDecimal price;
     private Category category;
-    private Producer producer;
-    private WarrantyPolicy warrantyPolicy;
+    private GetProducerDto producer;
+    private GetWarrantyPolicyDto warrantyPolicy;
 }

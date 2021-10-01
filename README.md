@@ -1,6 +1,6 @@
 ## Sales Company Microservices App  
 
-### Project in early stage of development, planned finish - end of november
+### Project in early stage of development, planned finish - end of november  
 
 System for sales management in company with many shops and warehouses.
 
@@ -17,29 +17,30 @@ System for sales management in company with many shops and warehouses.
 
 ### Implemented services
 
+- Api Gateway
 - Eureka Server  
 - Users Service (~80% done)
 - Products Service (~30% done)
+- Order Service (~20% done)
 
 ### Planned services  
 
-- API Gateway (with Spring Cloud)  
-- shops service  
-- warehouses service 
-- orders service  
-- returning service  
+- shop service  
+- warehouse service 
 
 ### TODO
 
 ### Products service  
 
-- write dao's, services, controllers  
+- check and test relations in entities  
+- write dao's, services, controllers of all domain classes  
 - validators of domain classes (+ unit tests of them)  
-- !! UNIT TESTS !!  
+- !! UNIT TESTS !! 
 
 
 ###Users Service
 
 - write more tests of repository  
-- finish and test controller  
+- tests of controller  
 - Add address domain class and include it to user  
+- Make separated classes for customer and admin  

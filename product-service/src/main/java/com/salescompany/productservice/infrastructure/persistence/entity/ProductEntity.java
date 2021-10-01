@@ -2,6 +2,7 @@ package com.salescompany.productservice.infrastructure.persistence.entity;
 
 import com.salescompany.productservice.domain.product.Product;
 import com.salescompany.productservice.domain.product.type.Category;
+import com.salescompany.productservice.domain.warranty_policy.WarrantyPolicy;
 import com.salescompany.productservice.infrastructure.persistence.entity.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,16 +24,17 @@ import java.math.BigDecimal;
 
 public class ProductEntity extends BaseEntity {
 
-    String name;
-    BigDecimal price;
-    Category category;
+    private String name;
+    private BigDecimal price;
+    private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "producer_id")
-    ProducerEntity producerEntity;
+    private ProducerEntity producer;
 
-    @OneToOne
-    WarrantyPolicyEntity warrantyPolicyEntity;
+    @ManyToOne
+    @JoinColumn(name = "warranty_policy_id")
+    private WarrantyPolicyEntity warrantyPolicy;
 
     public Product toProduct() {
         return Product.builder()
@@ -39,8 +42,8 @@ public class ProductEntity extends BaseEntity {
                 .name(name)
                 .price(price)
                 .category(category)
-                .producer(producerEntity.toProducer())
-                .warrantyPolicy(warrantyPolicyEntity.toWarrantyPolicy())
+                .producer(producer.toProducer())
+                .warrantyPolicy(warrantyPolicy.toWarrantyPolicy())
                 .build();
     }
 }
