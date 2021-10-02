@@ -30,7 +30,6 @@ public class AddressEntity extends BaseEntity {
     private String zipCode;
 
     @OneToOne
-    @JoinColumn(name = "id")
     ProducerEntity producer;
 
 

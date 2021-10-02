@@ -1,6 +1,7 @@
 package com.salescompany.productservice.domain.producer.dto;
 
 import com.salescompany.productservice.domain.address.Address;
+import com.salescompany.productservice.domain.address.dto.GetAddressDto;
 import com.salescompany.productservice.domain.producer.type.Industry;
 import com.salescompany.productservice.domain.warranty_policy.dto.GetWarrantyPolicyDto;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,6 @@ public class GetProducerDto {
     private Long id;
     private String name;
     private Industry industry;
-    private Address address;
+    private GetAddressDto address;
     private List<GetWarrantyPolicyDto> warrantyPolicies;
 }

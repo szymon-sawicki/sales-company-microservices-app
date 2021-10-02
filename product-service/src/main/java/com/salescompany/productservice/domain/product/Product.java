@@ -49,7 +49,7 @@ public class Product {
                 .price(price)
                 .category(category)
                 .producer(producer.toEntity())
-                .warrantyPolicyEntity(warrantyPolicy.toEntity())
+               // TODO .warrantyPolicyEntity(warrantyPolicy.toEntity())
                 .build();
     }
 

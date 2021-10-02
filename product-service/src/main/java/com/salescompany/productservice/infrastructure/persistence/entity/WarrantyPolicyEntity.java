@@ -29,9 +29,9 @@ public class WarrantyPolicyEntity extends BaseEntity {
     @Column(name = "processing_period")
     Integer processingPeriod;
 
-    @OneToMany(mappedBy = "warranty_policy_id")
+/*    @OneToMany(mappedBy = "warranty_policy_id")
     @Builder.Default
-    private List<ProductEntity> products = new ArrayList<>();
+    private List<ProductEntity> products = new ArrayList<>();*/
 
     @ElementCollection(targetClass = ServiceType.class)
     @CollectionTable

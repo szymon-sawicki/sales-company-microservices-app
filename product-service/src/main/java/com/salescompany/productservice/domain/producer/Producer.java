@@ -35,7 +35,7 @@ public class Producer {
                 .id(id)
                 .name(name)
                 .industry(industry)
-                .address(address)
+                .address(address.toGetAddressDto())
                 .warrantyPolicies(warrantyPolicies.stream().map(WarrantyPolicy::toGetWarrantyPolicyDto).toList())
                 .build();
     }
