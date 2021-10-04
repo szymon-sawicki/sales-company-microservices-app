@@ -35,6 +35,12 @@ public class CreateUpdateProductDtoValidator implements Validator<CreateUpdatePr
             errors.put("producer id", "is null or negative");
         }
 
+        if (createUpdateProductDto.getWarrantyPolicyId() == null) {
+            errors.put("warranty policy id", "is null");
+        } else if (createUpdateProductDto.getWarrantyPolicyId() <= 0L) {
+            errors.put("warranty policy id", "is null or negative");
+        }
+
         if (createUpdateProductDto.getCategory() == null) {
             errors.put("category", "is null");
         }

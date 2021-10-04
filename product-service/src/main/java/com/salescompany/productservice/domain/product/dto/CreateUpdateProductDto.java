@@ -18,6 +18,7 @@ public class CreateUpdateProductDto {
     BigDecimal price;
     Category category;
     Long producerId;
+    Long warrantyPolicyId;
 
     public Product toProduct() {
         return Product.builder()

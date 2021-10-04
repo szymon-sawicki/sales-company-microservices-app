@@ -20,7 +20,7 @@ public class CreateUpdateProducerDtoValidator implements Validator<CreateUpdateP
 
         if(createUpdateProducerDto.getName() == null) {
             errors.put("name","is null");
-        } else if(!createUpdateProducerDto.getName().matches("[\\w\\s\\-'.]{5,20}+")) {
+        } else if(!createUpdateProducerDto.getName().matches("[\\w\\s\\-'.]{3,20}+")) {
             errors.put("name","have wrong format");
         }
 
@@ -31,8 +31,8 @@ public class CreateUpdateProducerDtoValidator implements Validator<CreateUpdateP
         }
 
         var warrantyPolicies = createUpdateProducerDto.getWarrantyPolicies();
-        if(warrantyPolicies.isEmpty() || warrantyPolicies ==  null) {
-            errors.put("warranty policies","is empty or null");
+        if(warrantyPolicies ==  null) {
+            errors.put("warranty policies","are null");
         }
 
         return errors;
