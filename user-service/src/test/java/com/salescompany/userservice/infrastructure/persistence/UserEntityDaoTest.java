@@ -85,8 +85,8 @@ public class UserEntityDaoTest {
         var username2 = "cccccccccc";
         var mail2 = "ccccccc@ccccc.com";
 
-        var insertedUser1 = UserEntity.builder().id(5L).username(username1).mail(mail1).build();
-        var insertedUser2 = UserEntity.builder().id(2L).username(username2).mail(mail2).build();
+        var insertedUser1 = UserEntity.builder().username(username1).mail(mail1).build();
+        var insertedUser2 = UserEntity.builder().username(username2).mail(mail2).build();
 
         var user1 = UserEntity.builder().username(username1).mail(mail1).build();
         var user2 = UserEntity.builder().username(username2).mail(mail2).build();
@@ -95,8 +95,8 @@ public class UserEntityDaoTest {
         testEntityManager.persist(user2);
         testEntityManager.flush();
 
-        assertThat(userEntityDao.findByMail(mail1))
-                .isEqualTo(Optional.of(insertedUser1));
+        assertThat(userEntityDao.findByMail(mail1).orElseThrow().getUsername())
+                .isEqualTo(username1);
 
     }
 
@@ -109,8 +109,6 @@ public class UserEntityDaoTest {
         var username2 = "cccccccccc";
         var mail2 = "ccccccc@ccccc.com";
 
-        var insertedUser2 = UserEntity.builder().id(8L).username(username2).mail(mail2).build();
-
         var user1 = UserEntity.builder().username(username1).mail(mail1).build();
         var user2 = UserEntity.builder().username(username2).mail(mail2).build();
 
@@ -118,8 +116,8 @@ public class UserEntityDaoTest {
         testEntityManager.persist(user2);
         testEntityManager.flush();
 
-        assertThat(userEntityDao.findByUsername(username2))
-                .isEqualTo(Optional.of(insertedUser2));
+        assertThat(userEntityDao.findByUsername(username1).orElseThrow().getUsername())
+                .isEqualTo(username1);
     }
 
     @Test
@@ -131,19 +129,21 @@ public class UserEntityDaoTest {
         var username2 = "cccccccccc";
         var mail2 = "ccccccc@ccccc.com";
 
-        var id = 9L;
-
-        var insertedUser2 = UserEntity.builder().id(9L).username(username2).mail(mail2).build();
 
         var user1 = UserEntity.builder().username(username1).mail(mail1).build();
-        var user2 = UserEntity.builder().username(username2).mail(mail2).build();
 
         testEntityManager.persist(user1);
 
         testEntityManager.flush();
 
-        assertThat(userEntityDao.findByUsername(username2))
-                .isEqualTo(Optional.of(insertedUser2));
+
+        var id = userEntityDao.findByUsername(username1).orElseThrow().getId();
+        var userUpdate = UserEntity.builder().id(id).username(username2).mail(mail2).build();
+
+
+
+        assertThat(userEntityDao.save(userUpdate).getUsername())
+                .isEqualTo(username2);
     }
 
 
