@@ -3,6 +3,7 @@ package com.salescompany.productservice.domain.producer.dto.validator;
 import com.salescompany.productservice.domain.address.dto.validator.CreateUpdateAddressDtoValidator;
 import com.salescompany.productservice.domain.configs.validator.Validator;
 import com.salescompany.productservice.domain.producer.dto.CreateUpdateProducerDto;
+import com.salescompany.productservice.domain.warranty_policy.dto.validator.CreateUpdateWarrantyPolicyDtoValidator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +34,9 @@ public class CreateUpdateProducerDtoValidator implements Validator<CreateUpdateP
         var warrantyPolicies = createUpdateProducerDto.getWarrantyPolicies();
         if(warrantyPolicies ==  null) {
             errors.put("warranty policies","are null");
+        } else {
+            createUpdateProducerDto.getWarrantyPolicies()
+                    .forEach(policy->errors.putAll(new CreateUpdateWarrantyPolicyDtoValidator().validate(policy)));
         }
 
         return errors;

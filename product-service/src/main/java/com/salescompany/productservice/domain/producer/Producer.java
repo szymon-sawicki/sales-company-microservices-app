@@ -30,6 +30,27 @@ public class Producer {
                 .build();
     }
 
+    public Producer withId(Long newId) {
+        return Producer.builder()
+                .id(newId)
+                .name(name)
+                .industry(industry)
+                .address(address)
+                .warrantyPolicies(warrantyPolicies)
+                .build();
+    }
+
+    public Producer withWarrantyPolicies(List<WarrantyPolicy> newWarrantyPolicies) {
+        return Producer.builder()
+                .id(id)
+                .name(name)
+                .industry(industry)
+                .address(address)
+                .warrantyPolicies(newWarrantyPolicies)
+                .build();
+
+    }
+
     public GetProducerDto toGetProducerDto() {
         return GetProducerDto.builder()
                 .id(id)

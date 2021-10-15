@@ -5,6 +5,8 @@ import com.salescompany.productservice.domain.configs.validator.Validator;
 import com.salescompany.productservice.domain.configs.validator.ValidatorException;
 import com.salescompany.productservice.domain.producer.dto.CreateUpdateProducerDto;
 import com.salescompany.productservice.domain.producer.type.Industry;
+import com.salescompany.productservice.domain.warranty_policy.WarrantyPolicy;
+import com.salescompany.productservice.domain.warranty_policy.dto.CreateUpdateWarrantyPolicyDto;
 import com.salescompany.productservice.domain.warranty_policy.dto.GetWarrantyPolicyDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateUpdateProducerDtoValidatorTest {
 
@@ -97,7 +100,7 @@ public class CreateUpdateProducerDtoValidatorTest {
 
         var name = "Emontix";
         var industry = Industry.ELECTRONIC;
-        var warrantyPolicies = List.of(GetWarrantyPolicyDto.builder().build());
+        var warrantyPolicies = List.of(CreateUpdateWarrantyPolicyDto.builder().build());
 
         var address = CreateUpdateAddressDto.builder()
                 .zipCode("956-95")
@@ -116,7 +119,7 @@ public class CreateUpdateProducerDtoValidatorTest {
 
         var createUpdateProducerDtoValidator = new CreateUpdateProducerDtoValidator();
 
-        org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> Validator.validate(createUpdateProducerDtoValidator, producer));
+        assertDoesNotThrow(() -> Validator.validate(createUpdateProducerDtoValidator, producer));
 
     }
 
