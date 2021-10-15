@@ -10,7 +10,7 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://mysql3:3309/db_2?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://mysql3:3309/db_3?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     username: user
     password: user1234
 

@@ -25,14 +25,14 @@ public class ProducerEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Industry industry;
 
-    @OneToOne(mappedBy = "id")
+    @OneToOne
     private AddressEntity addressEntity;
 
     // list of warranty strategies accepted by that producer
-    @OneToMany(mappedBy = "id")
+    @OneToMany
     List<WarrantyPolicyEntity> warrantyPolicies;
 
-    @OneToMany(mappedBy="id")
+    @OneToMany(mappedBy="producer")
     @Builder.Default
     List<ProductEntity> products = new ArrayList<>();
 

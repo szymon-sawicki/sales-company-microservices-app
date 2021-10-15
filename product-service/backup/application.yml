@@ -3,14 +3,15 @@ server:
 
 spring:
   application:
-    name: product-service
+    name: order-service
 
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://mysql2:3308/db_2?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3308/db_2?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    driverClassName: com.mysql.jdbc.Driver
     username: user
     password: user1234
 

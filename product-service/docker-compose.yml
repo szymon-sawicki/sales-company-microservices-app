@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+
+  mysql2:
+    image: mysql:latest
+    volumes:
+      - mysql2:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_2
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user1234
+      MYSQL_TCP_PORT: 3308
+    ports:
+      - "3308:3308"
+    expose:
+      - 3308
+    networks:
+      - sales-company-network
+
+volumes:
+  mysql2:
+networks:
+  sales-company-network:

@@ -32,8 +32,7 @@ public class ProductEntity extends BaseEntity {
     @JoinColumn(name = "producer_id")
     private ProducerEntity producer;
 
-    @ManyToOne
-    @JoinColumn(name = "warranty_policy_id")
+    @OneToOne
     private WarrantyPolicyEntity warrantyPolicy;
 
     public Product toProduct() {

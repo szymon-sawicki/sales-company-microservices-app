@@ -7,6 +7,7 @@ import com.salescompany.productservice.domain.warranty_policy.dto.CreateUpdateWa
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class CreateUpdateWarrantyPolicyDtoValidator implements Validator<CreateUpdateWarrantyPolicyDto> {
 
     @Override

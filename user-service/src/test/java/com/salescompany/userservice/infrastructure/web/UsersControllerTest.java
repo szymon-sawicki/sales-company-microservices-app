@@ -153,8 +153,6 @@ public class UsersControllerTest {
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
         }
-
-
     }
 
 }
