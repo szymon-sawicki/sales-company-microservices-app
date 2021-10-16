@@ -51,7 +51,7 @@ public class ProducersService {
 
         return producerRepository.add(producerToInsert)
                 .map(Producer::toGetProducerDto)
-                .orElseThrow(() -> new ProducersServiceException("cannot add user"));
+                .orElseThrow(() -> new ProducersServiceException("cannot add producer"));
 
     }
 
@@ -69,12 +69,14 @@ public class ProducersService {
     }
 
     public GetProducerDto delete(Long id) {
+
         if (id == null) {
             throw new AddressesServiceException("id is null");
         }
         if (id <= 0) {
             throw new AddressesServiceException("id is 0 or negative");
         }
+
         return producerRepository.delete(id)
                 .orElseThrow(() -> new ProducersServiceException("cannot delete producer"))
                 .toGetProducerDto();

@@ -3,6 +3,7 @@ package com.salescompany.productservice.application.service;
 import com.salescompany.productservice.application.service.exception.ProducersServiceException;
 import com.salescompany.productservice.domain.address.Address;
 import com.salescompany.productservice.domain.address.dto.CreateUpdateAddressDto;
+import com.salescompany.productservice.domain.address.dto.GetAddressDto;
 import com.salescompany.productservice.domain.address.repository.AddressRepository;
 import com.salescompany.productservice.domain.producer.Producer;
 import com.salescompany.productservice.domain.producer.dto.CreateUpdateProducerDto;
@@ -11,6 +12,7 @@ import com.salescompany.productservice.domain.producer.repository.ProducerReposi
 import com.salescompany.productservice.domain.producer.type.Industry;
 import com.salescompany.productservice.domain.warranty_policy.WarrantyPolicy;
 import com.salescompany.productservice.domain.warranty_policy.dto.CreateUpdateWarrantyPolicyDto;
+import com.salescompany.productservice.domain.warranty_policy.dto.GetWarrantyPolicyDto;
 import com.salescompany.productservice.domain.warranty_policy.repository.WarrantyPolicyRepository;
 import com.salescompany.productservice.domain.warranty_policy.type.ServiceType;
 import org.assertj.core.api.Assertions;
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -100,7 +103,7 @@ public class ProducerServiceTest {
     }
 
     @Test
-    @DisplayName("when producer is searched by name")
+    @DisplayName("when producer is searched by name and exists")
     public void test2() {
 
         var id = 5L;
@@ -140,10 +143,10 @@ public class ProducerServiceTest {
         var name = "Emontix";
         var industry = Industry.ELECTRONIC;
         var warrantyPolicies = List.of(CreateUpdateWarrantyPolicyDto.builder()
-                        .possibleServices(List.of(ServiceType.EXCHANGE))
-                        .processingPeriod(34)
-                        .warrantyPeriod(24)
-                        .returningPercent(70)
+                .possibleServices(List.of(ServiceType.EXCHANGE))
+                .processingPeriod(34)
+                .warrantyPeriod(24)
+                .returningPercent(70)
                 .build());
 
         var address = CreateUpdateAddressDto.builder()
@@ -161,7 +164,7 @@ public class ProducerServiceTest {
                 .warrantyPolicies(warrantyPolicies)
                 .build();
 
-        when(addressRepository.findByAddress(anyString(),anyString(),anyString(),anyString()))
+        when(addressRepository.findByAddress(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(Optional.of(address.toAddress()));
 
         when(producerRepository.findByName(name))
@@ -173,6 +176,120 @@ public class ProducerServiceTest {
         assertThatThrownBy(() -> producersService.createProducer(producerDto))
                 .isInstanceOf(ProducersServiceException.class)
                 .hasMessageContaining("producer with given name already exists in db");
+
+    }
+
+    @Test
+    @DisplayName("when producer is created successfully")
+    public void test4() {
+
+        var name = "Emontix";
+        var industry = Industry.ELECTRONIC;
+
+
+        var warrantyPolicies = List.of(CreateUpdateWarrantyPolicyDto.builder()
+                .possibleServices(List.of(ServiceType.EXCHANGE))
+                .processingPeriod(34)
+                .warrantyPeriod(24)
+                .returningPercent(70)
+                .build());
+
+        var address = CreateUpdateAddressDto.builder()
+                .zipCode("956-95")
+                .city("Prague")
+                .street("Main Street")
+                .houseNumber("2345")
+                .build();
+
+
+        var producerDto = CreateUpdateProducerDto.builder()
+                .name(name)
+                .industry(industry)
+                .createUpdateAddressDto(address)
+                .warrantyPolicies(warrantyPolicies)
+                .build();
+
+        var expectedProducer = Producer.builder()
+                .id(4L)
+                .name(name)
+                .address(address.toAddress())
+                .warrantyPolicies(warrantyPolicies.stream().map(CreateUpdateWarrantyPolicyDto::toWarrantyPolicy).toList())
+                .industry(industry)
+                .build();
+
+        when(addressRepository.findByAddress(anyString(), anyString(), anyString(), anyString()))
+                .thenReturn(Optional.of(address.toAddress()));
+
+        when(producerRepository.findByName(name))
+                .thenReturn(Optional.empty());
+
+        when(producerRepository.add(any()))
+                .thenReturn(Optional.of(expectedProducer));
+
+        assertThat(producersService.createProducer(producerDto).getId())
+                .isEqualTo(4L);
+
+    }
+
+    @Test
+    @DisplayName("when producer is searched by username and don't exists")
+    public void test5() {
+
+        when(producerRepository.findByName(anyString()))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> producersService.findByName("aaaeed"))
+                .isInstanceOf(ProducersServiceException.class)
+                .hasMessageContaining("cannot find producer by name");
+
+    }
+
+    @Test
+    @DisplayName("when producer is deleted successfully")
+    public void test6() {
+
+        var name = "Ekofinix";
+        var industry = Industry.ELECTRONIC;
+
+        var warrantyPolicies = List.of(WarrantyPolicy.builder()
+                .possibleServices(List.of(ServiceType.EXCHANGE))
+                .processingPeriod(34)
+                .warrantyPeriod(24)
+                .returningPercent(70)
+                .build());
+
+
+        var address = Address.builder()
+                .zipCode("956-95")
+                .city("Prague")
+                .street("Main Street")
+                .houseNumber("2345")
+                .build();
+
+        var producer = Producer.builder()
+                .id(1L)
+                .name(name)
+                .industry(industry)
+                .address(address)
+                .warrantyPolicies(warrantyPolicies)
+                .build();
+
+        var expectedDto = GetProducerDto.builder()
+                .id(1L)
+                .name(name)
+                .industry(industry)
+                .warrantyPolicies(warrantyPolicies.stream().map(WarrantyPolicy::toGetWarrantyPolicyDto).toList())
+                .address(address.toGetAddressDto())
+                .build();
+
+
+
+        when(producerRepository.delete(1L))
+                .thenReturn(Optional.of(producer));
+
+        assertThat(producersService.delete(1L))
+                .isEqualTo(expectedDto);
+
 
     }
 
