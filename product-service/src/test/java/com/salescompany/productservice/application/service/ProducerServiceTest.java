@@ -50,7 +50,7 @@ public class ProducerServiceTest {
 
         @Bean
         public ProducersService producersService() {
-            return new ProducersService(producerRepository, addressRepository, warrantyPolicyRepository);
+            return new ProducersService(producerRepository, addressRepository);
         }
     }
 

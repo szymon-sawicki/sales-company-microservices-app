@@ -2,6 +2,8 @@ package com.salescompany.productservice.infrastructure.persistence.repository;
 
 import com.salescompany.productservice.domain.producer.Producer;
 import com.salescompany.productservice.domain.producer.repository.ProducerRepository;
+import com.salescompany.productservice.domain.producer.type.Industry;
+import com.salescompany.productservice.domain.product.type.Category;
 import com.salescompany.productservice.infrastructure.persistence.dao.ProducerEntityDao;
 import com.salescompany.productservice.infrastructure.persistence.entity.ProducerEntity;
 import lombok.RequiredArgsConstructor;
@@ -59,5 +61,13 @@ public class ProducerRepositoryImpl implements ProducerRepository {
     public Optional<Producer> findByName(String name) {
         return producerEntityDao.findByName(name)
                 .map(ProducerEntity::toProducer);
+    }
+
+    @Override
+    public List<Producer> findAllByIndustry(Industry industry) {
+        return producerEntityDao.findAllByIndustry(industry)
+                .stream()
+                .map(ProducerEntity::toProducer)
+                .toList();
     }
 }

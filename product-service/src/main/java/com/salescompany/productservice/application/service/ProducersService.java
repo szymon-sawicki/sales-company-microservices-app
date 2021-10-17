@@ -9,12 +9,16 @@ import com.salescompany.productservice.domain.producer.dto.CreateUpdateProducerD
 import com.salescompany.productservice.domain.producer.dto.GetProducerDto;
 import com.salescompany.productservice.domain.producer.dto.validator.CreateUpdateProducerDtoValidator;
 import com.salescompany.productservice.domain.producer.repository.ProducerRepository;
+import com.salescompany.productservice.domain.producer.type.Industry;
+import com.salescompany.productservice.domain.product.type.Category;
 import com.salescompany.productservice.domain.warranty_policy.dto.CreateUpdateWarrantyPolicyDto;
 import com.salescompany.productservice.domain.warranty_policy.repository.WarrantyPolicyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -113,6 +117,24 @@ public class ProducersService {
         return producerRepository.findByName(name)
                 .orElseThrow(() -> new ProducersServiceException("cannot find producer by name"))
                 .toGetProducerDto();
+    }
+
+    public List<GetProducerDto> findAll() {
+        return producerRepository.findAll()
+                .stream()
+                .map(Producer::toGetProducerDto)
+                .toList();
+    }
+
+    public List<GetProducerDto> findAllByIndustry(Industry industry) {
+        if(industry == null) {
+            throw new ProducersServiceException("industry is null");
+        }
+
+        return producerRepository.findAllByIndustry(industry)
+                .stream()
+                .map(Producer::toGetProducerDto)
+                .toList();
     }
 
 }
