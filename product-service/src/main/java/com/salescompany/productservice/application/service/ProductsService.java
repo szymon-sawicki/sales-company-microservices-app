@@ -3,10 +3,12 @@ package com.salescompany.productservice.application.service;
 import com.salescompany.productservice.application.service.exception.AddressesServiceException;
 import com.salescompany.productservice.application.service.exception.ProducersServiceException;
 import com.salescompany.productservice.application.service.exception.ProductsServiceException;
+import com.salescompany.productservice.domain.configs.validator.Validator;
 import com.salescompany.productservice.domain.producer.repository.ProducerRepository;
 import com.salescompany.productservice.domain.product.Product;
 import com.salescompany.productservice.domain.product.dto.CreateUpdateProductDto;
 import com.salescompany.productservice.domain.product.dto.GetProductDto;
+import com.salescompany.productservice.domain.product.dto.validator.CreateUpdateProductDtoValidator;
 import com.salescompany.productservice.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,10 @@ public class ProductsService {
 
     public GetProductDto findById(Long id) {
         if(id == null) {
-            throw new AddressesServiceException("id is null");
+            throw new ProductsServiceException("id is null");
         }
         if(id <= 0) {
-            throw new AddressesServiceException("id is 0 or negative");
+            throw new ProductsServiceException("id is 0 or negative");
         }
         return productRepository.findById(id)
                 .map(Product::toGetProductDto)
@@ -36,7 +38,7 @@ public class ProductsService {
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public GetProductDto create(CreateUpdateProductDto createUpdateProductDto) {
-        // TODO validation
+        Validator.validate(new CreateUpdateProductDtoValidator(),createUpdateProductDto);
 
         var producerFromDb = producerRepository.findById(createUpdateProductDto.getProducerId())
                 .orElseThrow(()->new ProductsServiceException("cannot find producer"));

@@ -20,9 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProducersService {
 
+    // TODO finding producers by category
+    // TODO find all producers
+
     private final ProducerRepository producerRepository;
     private final AddressRepository addressRepository;
-    private final WarrantyPolicyRepository warrantyPolicyRepository;
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public GetProducerDto createProducer(CreateUpdateProducerDto createUpdateProducerDto) {

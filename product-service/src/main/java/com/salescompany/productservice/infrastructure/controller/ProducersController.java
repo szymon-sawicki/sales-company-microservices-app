@@ -25,4 +25,18 @@ public class ProducersController {
         return ResponseDataDto.toResponse(producersService.findById(id));
     }
 
+    @GetMapping("/name/{name}")
+    ResponseDataDto<GetProducerDto> findProducerByName(@PathVariable String name) {
+        return ResponseDataDto.toResponse(producersService.findByName(name));
+    }
+
+    @PutMapping ("/{id}")
+    ResponseDataDto<GetProducerDto> updateProducer(@PathVariable Long id, @RequestBody CreateUpdateProducerDto createUpdateProducerDto) {
+        return ResponseDataDto.toResponse(producersService.update(id,createUpdateProducerDto));
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseDataDto<GetProducerDto> deleteProducer(@PathVariable Long id) {
+        return ResponseDataDto.toResponse(producersService.delete(id));
+    }
 }

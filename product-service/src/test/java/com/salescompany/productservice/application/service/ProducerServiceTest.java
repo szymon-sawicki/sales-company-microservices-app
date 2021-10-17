@@ -289,7 +289,108 @@ public class ProducerServiceTest {
 
         assertThat(producersService.delete(1L))
                 .isEqualTo(expectedDto);
+    }
 
+    @Test
+    @DisplayName("when cannot find producer to update")
+    public void test7() {
+
+        var name = "Ekofinix";
+        var industry = Industry.ELECTRONIC;
+
+        var warrantyPolicies = List.of(CreateUpdateWarrantyPolicyDto.builder()
+                .possibleServices(List.of(ServiceType.EXCHANGE))
+                .processingPeriod(34)
+                .warrantyPeriod(24)
+                .returningPercent(70)
+                .build());
+
+
+        var address = CreateUpdateAddressDto.builder()
+                .zipCode("956-95")
+                .city("Prague")
+                .street("Main Street")
+                .houseNumber("2345")
+                .build();
+
+        var producer = CreateUpdateProducerDto.builder()
+                .name(name)
+                .industry(industry)
+                .createUpdateAddressDto(address)
+                .warrantyPolicies(warrantyPolicies)
+                .build();
+
+        var id = 3L;
+
+        when(producerRepository.findById(id))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> producersService.update(id,producer))
+                .isInstanceOf(ProducersServiceException.class)
+                .hasMessageContaining("cannot find producer to update");
+
+    }
+
+    @Test
+    @DisplayName("when producer is updated successfully")
+    public void test8() {
+
+        var name = "Ekofinix";
+        var industry = Industry.ELECTRONIC;
+
+        var warrantyPolicies = List.of(CreateUpdateWarrantyPolicyDto.builder()
+                .possibleServices(List.of(ServiceType.EXCHANGE))
+                .processingPeriod(34)
+                .warrantyPeriod(24)
+                .returningPercent(70)
+                .build());
+
+
+        var address = CreateUpdateAddressDto.builder()
+                .zipCode("956-95")
+                .city("Prague")
+                .street("Main Street")
+                .houseNumber("2345")
+                .build();
+
+        var producerUpdate = CreateUpdateProducerDto.builder()
+                .name(name)
+                .industry(industry)
+                .createUpdateAddressDto(address)
+                .warrantyPolicies(warrantyPolicies)
+                .build();
+
+        var id = 7L;
+
+        var producerFromDb = Producer.builder()
+                .id(id)
+                .name(name)
+                .industry(industry)
+                .address(address.toAddress())
+                .warrantyPolicies(warrantyPolicies.stream().map(CreateUpdateWarrantyPolicyDto::toWarrantyPolicy).toList())
+                .build();
+
+
+
+        var expectedProducer = GetProducerDto.builder()
+                .id(id)
+                .name(name)
+                .address(address.toAddress().toGetAddressDto())
+                .warrantyPolicies(warrantyPolicies.stream().map(policy->policy
+                        .toWarrantyPolicy()
+                        .toGetWarrantyPolicyDto())
+                        .toList())
+                .industry(industry)
+                .build();
+
+        when(producerRepository.findById(id))
+                .thenReturn(Optional.of(producerFromDb));
+
+        when(producerRepository.add(any()))
+                .thenReturn(Optional.of(producerFromDb));
+
+        assertThat(producersService.update(7L,producerUpdate))
+                .isEqualTo(expectedProducer);
 
     }
 
