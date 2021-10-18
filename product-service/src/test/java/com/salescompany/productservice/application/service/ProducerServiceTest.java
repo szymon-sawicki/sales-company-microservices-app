@@ -3,7 +3,6 @@ package com.salescompany.productservice.application.service;
 import com.salescompany.productservice.application.service.exception.ProducersServiceException;
 import com.salescompany.productservice.domain.address.Address;
 import com.salescompany.productservice.domain.address.dto.CreateUpdateAddressDto;
-import com.salescompany.productservice.domain.address.dto.GetAddressDto;
 import com.salescompany.productservice.domain.address.repository.AddressRepository;
 import com.salescompany.productservice.domain.producer.Producer;
 import com.salescompany.productservice.domain.producer.dto.CreateUpdateProducerDto;
@@ -12,14 +11,12 @@ import com.salescompany.productservice.domain.producer.repository.ProducerReposi
 import com.salescompany.productservice.domain.producer.type.Industry;
 import com.salescompany.productservice.domain.warranty_policy.WarrantyPolicy;
 import com.salescompany.productservice.domain.warranty_policy.dto.CreateUpdateWarrantyPolicyDto;
-import com.salescompany.productservice.domain.warranty_policy.dto.GetWarrantyPolicyDto;
 import com.salescompany.productservice.domain.warranty_policy.repository.WarrantyPolicyRepository;
 import com.salescompany.productservice.domain.warranty_policy.type.ServiceType;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
+import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,8 +26,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -229,6 +226,13 @@ public class ProducerServiceTest {
         assertThat(producersService.createProducer(producerDto).getId())
                 .isEqualTo(4L);
 
+
+        InOrder inOrder = inOrder(producerRepository,addressRepository);
+        inOrder.verify(addressRepository,times(1)).findByAddress(anyString(),anyString(),anyString(),anyString());
+        inOrder.verify(producerRepository,times(1)).findByName(anyString());
+        inOrder.verify(producerRepository,times(1)).add(any(Producer.class));
+
+
     }
 
     @Test
@@ -391,6 +395,11 @@ public class ProducerServiceTest {
 
         assertThat(producersService.update(7L,producerUpdate))
                 .isEqualTo(expectedProducer);
+
+        InOrder inOrder = inOrder(producerRepository);
+
+        inOrder.verify(producerRepository,times(1)).findById(anyLong());
+        inOrder.verify(producerRepository,times(1)).add(any(Producer.class));
 
     }
 
