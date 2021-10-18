@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-public class ProducerServiceTest {
+public class ProducersServiceTest {
 
     @TestConfiguration
     public static class ProducersServiceTestConfiguration {

@@ -1,13 +1,16 @@
 package com.salescompany.productservice.infrastructure.persistence.repository;
 
+import com.salescompany.productservice.domain.producer.Producer;
 import com.salescompany.productservice.domain.product.Product;
 import com.salescompany.productservice.domain.product.repository.ProductRepository;
+import com.salescompany.productservice.domain.product.type.Category;
 import com.salescompany.productservice.infrastructure.persistence.dao.ProductEntityDao;
 import com.salescompany.productservice.infrastructure.persistence.entity.ProductEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.PersistenceException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +55,36 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .stream()
                 .map(ProductEntity::toProduct)
                 .toList();
+    }
+
+    @Override
+    public List<Product> findAllByProducer(Producer producer) {
+        return productEntityDao.findAllByProducer(producer.toEntity())
+                .stream()
+                .map(ProductEntity::toProduct)
+                .toList();
+    }
+
+    @Override
+    public List<Product> findAllByCategory(Category category) {
+        return productEntityDao.findAllByCategory(category)
+                .stream()
+                .map(ProductEntity::toProduct)
+                .toList();
+    }
+
+    @Override
+    public List<Product> findAllByPriceBetween(BigDecimal min, BigDecimal max) {
+        return productEntityDao.findAllByPriceBetween(min,max)
+                .stream()
+                .map(ProductEntity::toProduct)
+                .toList();
+    }
+
+    @Override
+    public Optional<Product> findByName(String name) {
+        return productEntityDao.findByName(name)
+                .map(ProductEntity::toProduct);
     }
 }
 

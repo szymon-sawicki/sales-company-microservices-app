@@ -42,6 +42,17 @@ public class Product {
                 .build();
     }
 
+    public Product withWarrantyPolicy(WarrantyPolicy newWarrantyPolicy) {
+        return Product.builder()
+                .id(id)
+                .name(name)
+                .price(price)
+                .category(category)
+                .producer(producer)
+                .warrantyPolicy(newWarrantyPolicy)
+                .build();
+    }
+
     public ProductEntity toEntity() {
         return ProductEntity.builder()
                 .id(id)
@@ -49,7 +60,7 @@ public class Product {
                 .price(price)
                 .category(category)
                 .producer(producer.toEntity())
-               // TODO .warrantyPolicyEntity(warrantyPolicy.toEntity())
+                .warrantyPolicy(warrantyPolicy.toEntity())
                 .build();
     }
 

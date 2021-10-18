@@ -28,10 +28,10 @@ public class ProductsController {
         return ResponseDataDto.toResponse(productsService.findById(id));
     }
 
-    @GetMapping("/byId")
+    @GetMapping("/all-by-id/{ids}")
     public List<GetProductDto> getProductsByIds(@RequestParam String ids) {
-        var idss = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
-        return productsService.getProductsByIds(idss);
+        var idsConverted = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
+        return productsService.findAllById(idsConverted);
     }
 
 

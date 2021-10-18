@@ -3,9 +3,14 @@ package com.salescompany.productservice.infrastructure.controller;
 import com.salescompany.productservice.application.service.ProducersService;
 import com.salescompany.productservice.domain.producer.dto.CreateUpdateProducerDto;
 import com.salescompany.productservice.domain.producer.dto.GetProducerDto;
+import com.salescompany.productservice.domain.producer.type.Industry;
 import com.salescompany.productservice.infrastructure.controller.dto.ResponseDataDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.LifecycleState;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,4 +44,15 @@ public class ProducersController {
     ResponseDataDto<GetProducerDto> deleteProducer(@PathVariable Long id) {
         return ResponseDataDto.toResponse(producersService.delete(id));
     }
-}
+
+    @GetMapping("/all")
+    ResponseDataDto<List<GetProducerDto>> findAllProducers() {
+        return ResponseDataDto.toResponse(producersService.findAll());
+    }
+
+
+    @GetMapping("/industry/{industry}")
+    ResponseDataDto<List<GetProducerDto>> findAllByIndustry(@PathVariable String industry) {
+        return ResponseDataDto.toResponse(producersService.findAllByIndustry(Industry.valueOf(industry.toUpperCase(Locale.ROOT))));
+    }
+ }

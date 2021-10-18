@@ -10,6 +10,8 @@ import com.salescompany.productservice.domain.product.dto.CreateUpdateProductDto
 import com.salescompany.productservice.domain.product.dto.GetProductDto;
 import com.salescompany.productservice.domain.product.dto.validator.CreateUpdateProductDtoValidator;
 import com.salescompany.productservice.domain.product.repository.ProductRepository;
+import com.salescompany.productservice.domain.warranty_policy.WarrantyPolicy;
+import com.salescompany.productservice.domain.warranty_policy.repository.WarrantyPolicyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -23,6 +25,7 @@ public class ProductsService {
 
     private final ProductRepository productRepository;
     private final ProducerRepository producerRepository;
+    private final WarrantyPolicyRepository warrantyPolicyRepository;
 
     public GetProductDto findById(Long id) {
         if(id == null) {
@@ -33,7 +36,7 @@ public class ProductsService {
         }
         return productRepository.findById(id)
                 .map(Product::toGetProductDto)
-                .orElseThrow(() -> new ProducersServiceException("cannot find product by id"));
+                .orElseThrow(() -> new ProductsServiceException("cannot find product by id"));
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -43,7 +46,10 @@ public class ProductsService {
         var producerFromDb = producerRepository.findById(createUpdateProductDto.getProducerId())
                 .orElseThrow(()->new ProductsServiceException("cannot find producer"));
 
-        var productToInsert = createUpdateProductDto.toProduct().withProducer(producerFromDb);
+        var warrantyPolicyFromDb = warrantyPolicyRepository.findById(createUpdateProductDto.getWarrantyPolicyId())
+                .orElseThrow(() -> new ProducersServiceException("cannot find warranty policy"));
+
+        var productToInsert = createUpdateProductDto.toProduct().withProducer(producerFromDb).withWarrantyPolicy(warrantyPolicyFromDb);
 
         return productRepository.add(productToInsert)
                 .map(Product::toGetProductDto)
@@ -51,13 +57,21 @@ public class ProductsService {
 
     }
 
-    public List<GetProductDto> getProductsByIds(List<Long> ids) {
+    public List<GetProductDto> findAllById(List<Long> ids) {
+        if(ids == null)  {
+            throw new ProductsServiceException("list of ids is null");
+        }
+
+        if(ids.isEmpty()) {
+            throw new ProductsServiceException("list of ids is null");
+        }
 
         return productRepository.findAllById(ids)
-                .stream().map(Product::toGetProductDto)
+                .stream()
+                .map(Product::toGetProductDto)
                 .toList();
-
     }
+
 
 
 
