@@ -47,7 +47,7 @@ public class ProductsService {
                 .orElseThrow(()->new ProductsServiceException("cannot find producer"));
 
         var warrantyPolicyFromDb = warrantyPolicyRepository.findById(createUpdateProductDto.getWarrantyPolicyId())
-                .orElseThrow(() -> new ProducersServiceException("cannot find warranty policy"));
+                .orElseThrow(() -> new ProductsServiceException("cannot find warranty policy"));
 
         var productToInsert = createUpdateProductDto.toProduct().withProducer(producerFromDb).withWarrantyPolicy(warrantyPolicyFromDb);
 
@@ -63,7 +63,7 @@ public class ProductsService {
         }
 
         if(ids.isEmpty()) {
-            throw new ProductsServiceException("list of ids is null");
+            throw new ProductsServiceException("list of ids is empty");
         }
 
         return productRepository.findAllById(ids)
