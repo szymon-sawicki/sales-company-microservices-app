@@ -42,6 +42,17 @@ public class Product {
                 .build();
     }
 
+    public Product withId(Long newId) {
+        return Product.builder()
+                .id(newId)
+                .name(name)
+                .price(price)
+                .category(category)
+                .producer(producer)
+                .warrantyPolicy(warrantyPolicy)
+                .build();
+    }
+
     public Product withWarrantyPolicy(WarrantyPolicy newWarrantyPolicy) {
         return Product.builder()
                 .id(id)

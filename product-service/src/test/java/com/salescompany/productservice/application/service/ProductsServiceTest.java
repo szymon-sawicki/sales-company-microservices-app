@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -296,7 +297,130 @@ public class ProductsServiceTest {
         assertThatThrownBy(() -> productsService.findAllById(Collections.emptyList()))
                 .isInstanceOf(ProductsServiceException.class)
                 .hasMessageContaining("list of ids is empty");
+    }
+
+    @Test
+    @DisplayName("when producer to update cannot be found in db")
+    public void test8() {
+
+        var id = 6L;
+
+        when(productRepository.findById(id))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> productsService.update(6L,null))
+                .isInstanceOf(ProductsServiceException.class)
+                .hasMessageContaining("cannot find product to update");
 
 
     }
+
+    @Test
+    @DisplayName("when product is updated and warranty policy cannot be found")
+    public void test9() {
+
+        var id = 8L;
+        var name = "The magic soap";
+        var price = new BigDecimal("250");
+        var category = Category.ELECTRONIC;
+        var producerId = 4L;
+        var warrantyPolicyId = 2L;
+
+
+        var createProductDto = CreateUpdateProductDto.builder()
+                .name(name)
+                .price(price)
+                .category(category)
+                .producerId(producerId)
+                .warrantyPolicyId(warrantyPolicyId)
+                .build();
+
+        when(productRepository.findById(id))
+                .thenReturn(Optional.of(createProductDto.toProduct()));
+
+        when(producerRepository.findById(producerId))
+                .thenReturn(Optional.of(Producer.builder().build()));
+
+        when(warrantyPolicyRepository.findById(warrantyPolicyId))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> productsService.update(id,createProductDto))
+                .isInstanceOf(ProductsServiceException.class)
+                .hasMessageContaining("cannot find warranty policy");
+    }
+
+
+    @Test
+    @DisplayName("when product is updated and producer cannot be found")
+    public void test10() {
+
+        var id = 8L;
+        var name = "The magic soap";
+        var price = new BigDecimal("250");
+        var category = Category.ELECTRONIC;
+        var producerId = 4L;
+        var warrantyPolicyId = 2L;
+
+
+        var createProductDto = CreateUpdateProductDto.builder()
+                .name(name)
+                .price(price)
+                .category(category)
+                .producerId(producerId)
+                .warrantyPolicyId(warrantyPolicyId)
+                .build();
+
+        when(productRepository.findById(id))
+                .thenReturn(Optional.of(createProductDto.toProduct()));
+
+        when(producerRepository.findById(producerId))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> productsService.update(id,createProductDto))
+                .isInstanceOf(ProductsServiceException.class)
+                .hasMessageContaining("cannot find producer");
+    }
+
+    @Test
+    @DisplayName("when product is succesfully")
+    public void test11() {
+
+        var id = 8L;
+        var name = "The magic soap";
+        var price = new BigDecimal("250");
+        var category = Category.ELECTRONIC;
+        var producerId = 4L;
+        var warrantyPolicyId = 2L;
+
+
+        var createProductDto = CreateUpdateProductDto.builder()
+                .name(name)
+                .price(price)
+                .category(category)
+                .producerId(producerId)
+                .warrantyPolicyId(warrantyPolicyId)
+                .build();
+
+        var producer = Producer
+                .builder()
+                .address(Address.builder().build())
+                .warrantyPolicies(List.of(WarrantyPolicy.builder().build()))
+                .build();
+
+        when(productRepository.findById(id))
+                .thenReturn(Optional.of(createProductDto.toProduct()));
+
+        when(producerRepository.findById(producerId))
+                .thenReturn(Optional.of(producer));
+
+        when(warrantyPolicyRepository.findById(warrantyPolicyId))
+                .thenReturn(Optional.of(WarrantyPolicy.builder().build()));
+
+        when(productRepository.add(any()))
+                .thenReturn(Optional.of(createProductDto.toProduct()));
+
+        assertDoesNotThrow(()->productsService.update(id,createProductDto));
+    }
+
+
 }
