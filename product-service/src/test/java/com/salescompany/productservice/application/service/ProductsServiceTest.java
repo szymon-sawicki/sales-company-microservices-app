@@ -6,6 +6,7 @@ import com.salescompany.productservice.domain.address.dto.GetAddressDto;
 import com.salescompany.productservice.domain.producer.Producer;
 import com.salescompany.productservice.domain.producer.dto.GetProducerDto;
 import com.salescompany.productservice.domain.producer.repository.ProducerRepository;
+import com.salescompany.productservice.domain.producer.type.Industry;
 import com.salescompany.productservice.domain.product.Product;
 import com.salescompany.productservice.domain.product.dto.CreateUpdateProductDto;
 import com.salescompany.productservice.domain.product.dto.GetProductDto;
@@ -283,11 +284,11 @@ public class ProductsServiceTest {
                 .warrantyPolicy(GetWarrantyPolicyDto.builder().build())
                 .build();
 
-        when(productRepository.findAllById(List.of(id1,id2)))
-                .thenReturn(List.of(product,product1));
+        when(productRepository.findAllById(List.of(id1, id2)))
+                .thenReturn(List.of(product, product1));
 
-        assertThat(productsService.findAllById(List.of(5L,7L)))
-                .containsAll(List.of(expectedProduct,expectedProduct1));
+        assertThat(productsService.findAllById(List.of(5L, 7L)))
+                .containsAll(List.of(expectedProduct, expectedProduct1));
     }
 
     @Test
@@ -308,7 +309,7 @@ public class ProductsServiceTest {
         when(productRepository.findById(id))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> productsService.update(6L,null))
+        assertThatThrownBy(() -> productsService.update(6L, null))
                 .isInstanceOf(ProductsServiceException.class)
                 .hasMessageContaining("cannot find product to update");
 
@@ -344,7 +345,7 @@ public class ProductsServiceTest {
         when(warrantyPolicyRepository.findById(warrantyPolicyId))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> productsService.update(id,createProductDto))
+        assertThatThrownBy(() -> productsService.update(id, createProductDto))
                 .isInstanceOf(ProductsServiceException.class)
                 .hasMessageContaining("cannot find warranty policy");
     }
@@ -376,13 +377,13 @@ public class ProductsServiceTest {
         when(producerRepository.findById(producerId))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> productsService.update(id,createProductDto))
+        assertThatThrownBy(() -> productsService.update(id, createProductDto))
                 .isInstanceOf(ProductsServiceException.class)
                 .hasMessageContaining("cannot find producer");
     }
 
     @Test
-    @DisplayName("when product is succesfully")
+    @DisplayName("when product is updated succesfully")
     public void test11() {
 
         var id = 8L;
@@ -392,6 +393,7 @@ public class ProductsServiceTest {
         var producerId = 4L;
         var warrantyPolicyId = 2L;
 
+        var warrantyPolicy = WarrantyPolicy.builder().build();
 
         var createProductDto = CreateUpdateProductDto.builder()
                 .name(name)
@@ -404,7 +406,7 @@ public class ProductsServiceTest {
         var producer = Producer
                 .builder()
                 .address(Address.builder().build())
-                .warrantyPolicies(List.of(WarrantyPolicy.builder().build()))
+                .warrantyPolicies(List.of(warrantyPolicy))
                 .build();
 
         when(productRepository.findById(id))
@@ -414,13 +416,231 @@ public class ProductsServiceTest {
                 .thenReturn(Optional.of(producer));
 
         when(warrantyPolicyRepository.findById(warrantyPolicyId))
-                .thenReturn(Optional.of(WarrantyPolicy.builder().build()));
+                .thenReturn(Optional.of(warrantyPolicy));
 
         when(productRepository.add(any()))
-                .thenReturn(Optional.of(createProductDto.toProduct()));
+                .thenReturn(Optional.of(createProductDto.toProduct().withProducer(producer).withWarrantyPolicy(warrantyPolicy)));
 
-        assertDoesNotThrow(()->productsService.update(id,createProductDto));
+        assertDoesNotThrow(() -> productsService.update(id, createProductDto));
     }
 
+    @Test
+    @DisplayName("when product is deleted and dont't exist in db")
+    public void test12() {
+
+        var id = 5L;
+
+        when(productRepository.delete(id))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> productsService.delete(id))
+                .isInstanceOf(ProductsServiceException.class)
+                .hasMessageContaining("cannot delete product");
+
+    }
+
+    @Test
+    @DisplayName("when product is deleted and id is negative")
+    public void test13() {
+
+        var id = -5L;
+
+
+        assertThatThrownBy(() -> productsService.delete(id))
+                .isInstanceOf(ProductsServiceException.class)
+                .hasMessageContaining("id is 0 or negative");
+
+    }
+
+    @Test
+    @DisplayName("when product is deleted successfully")
+    public void test14() {
+
+        var id = 5L;
+        var name = "testex12";
+        var category = Category.ELECTRONIC;
+        var warrantyPolicy = WarrantyPolicy.builder().build();
+        var producer = Producer.builder()
+                .address(Address.builder().build())
+                .warrantyPolicies(List.of(warrantyPolicy))
+                .build();
+
+        var product = Product.builder()
+                .id(id)
+                .name(name)
+                .category(category)
+                .warrantyPolicy(warrantyPolicy)
+                .producer(producer)
+                .build();
+
+        var expectedProduct = GetProductDto.builder()
+                .id(id)
+                .name(name)
+                .category(category)
+                .warrantyPolicy(warrantyPolicy.toGetWarrantyPolicyDto())
+                .producer(producer.toGetProducerDto())
+                .build();
+
+        when(productRepository.delete(id))
+                .thenReturn(Optional.of(product));
+
+        assertThat(productsService.delete(5L))
+                .isEqualTo(expectedProduct);
+
+    }
+
+    @Test
+    @DisplayName("when range of price is incorrect - min greater than max")
+    public void test15() {
+
+        var min = new BigDecimal("250");
+        var max = new BigDecimal("200");
+
+       assertThatThrownBy(() -> productsService.findAllInPriceRange(min,max))
+               .isInstanceOf(ProductsServiceException.class)
+               .hasMessageContaining("range is incorrect");
+    }
+
+    @Test
+    @DisplayName("when products in range of price are searched, should return list of 2")
+    public void test16() {
+
+        var id = 5L;
+        var id2 = 7L;
+        var price = new BigDecimal("150");
+        var price2 = new BigDecimal("200");
+        var name = "testex1";
+        var name2 = "testex2";
+
+        var category = Category.ELECTRONIC;
+
+        var warrantyPolicy = WarrantyPolicy.builder().build();
+        var producer = Producer.builder()
+                .address(Address.builder().build())
+                .warrantyPolicies(List.of(warrantyPolicy))
+                .build();
+
+        var product = Product.builder()
+                .id(id)
+                .name(name)
+                .category(category)
+                .price(price)
+                .warrantyPolicy(warrantyPolicy)
+                .producer(producer)
+                .build();
+
+        var product2 = Product.builder()
+                .id(id2)
+                .name(name2)
+                .category(category)
+                .price(price2)
+                .warrantyPolicy(warrantyPolicy)
+                .producer(producer)
+                .build();
+
+        var expectedProduct = GetProductDto.builder()
+                .id(id)
+                .name(name)
+                .category(category)
+                .price(price)
+                .warrantyPolicy(warrantyPolicy.toGetWarrantyPolicyDto())
+                .producer(producer.toGetProducerDto())
+                .build();
+
+        var expectedProduct2 = GetProductDto.builder()
+                .id(id2)
+                .name(name2)
+                .category(category)
+                .price(price2)
+                .warrantyPolicy(warrantyPolicy.toGetWarrantyPolicyDto())
+                .producer(producer.toGetProducerDto())
+                .build();
+
+        var min = new BigDecimal("50");
+        var max = new BigDecimal("250");
+
+        when(productRepository.findAllByPriceBetween(min, max))
+                .thenReturn(List.of(product,product2));
+
+        assertThat(productsService.findAllInPriceRange(min,max))
+                .hasSize(2)
+                .containsAll(List.of(expectedProduct,expectedProduct2));
+    }
+
+    @Test
+    @DisplayName("when min value is lower than 0")
+    public void test17() {
+
+        assertThatThrownBy(() -> productsService.findAllInPriceRange(new BigDecimal("-5"),BigDecimal.TEN))
+                .isInstanceOf(ProductsServiceException.class)
+                .hasMessageContaining("min value is out of range");
+
+    }
+
+    @Test
+    @DisplayName("when products are searched by category")
+    public void test18() {
+
+        var id = 5L;
+        var id2 = 7L;
+        var price = new BigDecimal("150");
+        var price2 = new BigDecimal("200");
+        var name = "testex1";
+        var name2 = "testex2";
+
+        var category = Category.ELECTRONIC;
+
+        var warrantyPolicy = WarrantyPolicy.builder().build();
+        var producer = Producer.builder()
+                .address(Address.builder().build())
+                .warrantyPolicies(List.of(warrantyPolicy))
+                .build();
+
+        var product = Product.builder()
+                .id(id)
+                .name(name)
+                .category(category)
+                .price(price)
+                .warrantyPolicy(warrantyPolicy)
+                .producer(producer)
+                .build();
+
+        var product2 = Product.builder()
+                .id(id2)
+                .name(name2)
+                .category(category)
+                .price(price2)
+                .warrantyPolicy(warrantyPolicy)
+                .producer(producer)
+                .build();
+
+        var expectedProduct = GetProductDto.builder()
+                .id(id)
+                .name(name)
+                .category(category)
+                .price(price)
+                .warrantyPolicy(warrantyPolicy.toGetWarrantyPolicyDto())
+                .producer(producer.toGetProducerDto())
+                .build();
+
+        var expectedProduct2 = GetProductDto.builder()
+                .id(id2)
+                .name(name2)
+                .category(category)
+                .price(price2)
+                .warrantyPolicy(warrantyPolicy.toGetWarrantyPolicyDto())
+                .producer(producer.toGetProducerDto())
+                .build();
+
+        var min = new BigDecimal("50");
+        var max = new BigDecimal("250");
+
+        when(productRepository.findAllByCategory(Category.ELECTRONIC))
+                .thenReturn(List.of(product,product2));
+
+        assertThat(productsService.findAllByCategory(Category.ELECTRONIC))
+                .hasSize(2)
+                .containsAll(List.of(expectedProduct,expectedProduct2));
+    }
 
 }
