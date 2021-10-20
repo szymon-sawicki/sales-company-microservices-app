@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,7 +54,7 @@ public class ProductsController {
 
     @GetMapping("/category/{category}")
     public ResponseDataDto<List<GetProductDto>> findProductsByCategory(@PathVariable String category) {
-        return ResponseDataDto.toResponse(productsService.findAllByCategory(Category.valueOf(category)));
+        return ResponseDataDto.toResponse(productsService.findAllByCategory(Category.valueOf(category.toUpperCase(Locale.ROOT))));
     }
 
     @GetMapping("/producer/{id}")

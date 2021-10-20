@@ -59,7 +59,7 @@ public class ProducerEntityDaoTest {
     }
 
     @Test
-    @DisplayName("when user is searched by name")
+    @DisplayName("when producers are searched by industry")
     public void test3() {
 
         var producer1 = ProducerEntity.builder().name("tech corporation").industry(Industry.ELECTRONIC).build();
