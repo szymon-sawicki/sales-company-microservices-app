@@ -43,6 +43,10 @@ public class ProductsService {
     public GetProductDto create(CreateUpdateProductDto createUpdateProductDto) {
         Validator.validate(new CreateUpdateProductDtoValidator(),createUpdateProductDto);
 
+        if(productRepository.findByName(createUpdateProductDto.getName()).isPresent()) {
+            throw new ProductsServiceException("product with given name is already present in db");
+        }
+
         var producerFromDb = producerRepository.findById(createUpdateProductDto.getProducerId())
                 .orElseThrow(()->new ProductsServiceException("cannot find producer"));
 
@@ -153,7 +157,7 @@ public class ProductsService {
                 .toList();
     }
 
-    List<GetProductDto> findAllByCategory(Category category) {
+    public List<GetProductDto> findAllByCategory(Category category) {
         if(category == null) {
             throw new ProductsServiceException("category is null");
         }
@@ -164,7 +168,7 @@ public class ProductsService {
                 .toList();
     }
 
-    List<GetProductDto> findAllByProducer(Producer producer) {
+    public List<GetProductDto> findAllByProducer(Producer producer) {
         if(producer == null) {
             throw new ProductsServiceException("producer is null");
         }

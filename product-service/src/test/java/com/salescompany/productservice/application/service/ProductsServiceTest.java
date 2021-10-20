@@ -19,6 +19,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -199,6 +200,12 @@ public class ProductsServiceTest {
 
         assertThat(productsService.create(createProductDto))
                 .isEqualTo(expectedProduct);
+
+        InOrder inOrder = inOrder(productRepository,producerRepository,warrantyPolicyRepository);
+        inOrder.verify(productRepository,times(1)).findByName(anyString());
+        inOrder.verify(producerRepository,times(1)).findById(anyLong());
+        inOrder.verify(warrantyPolicyRepository,times(1)).findById(anyLong());
+        inOrder.verify(productRepository,times(1)).add(any(Product.class));
     }
 
     @Test
@@ -639,6 +646,72 @@ public class ProductsServiceTest {
                 .thenReturn(List.of(product,product2));
 
         assertThat(productsService.findAllByCategory(Category.ELECTRONIC))
+                .hasSize(2)
+                .containsAll(List.of(expectedProduct,expectedProduct2));
+    }
+
+    @Test
+    @DisplayName("when products are searched by producer")
+    public void test19() {
+
+        var id = 5L;
+        var id2 = 7L;
+        var price = new BigDecimal("150");
+        var price2 = new BigDecimal("200");
+        var name = "testex1";
+        var name2 = "testex2";
+
+        var category = Category.ELECTRONIC;
+
+        var warrantyPolicy = WarrantyPolicy.builder().build();
+        var producer = Producer.builder()
+                .address(Address.builder().build())
+                .warrantyPolicies(List.of(warrantyPolicy))
+                .build();
+
+        var product = Product.builder()
+                .id(id)
+                .name(name)
+                .category(category)
+                .price(price)
+                .warrantyPolicy(warrantyPolicy)
+                .producer(producer)
+                .build();
+
+        var product2 = Product.builder()
+                .id(id2)
+                .name(name2)
+                .category(category)
+                .price(price2)
+                .warrantyPolicy(warrantyPolicy)
+                .producer(producer)
+                .build();
+
+        var expectedProduct = GetProductDto.builder()
+                .id(id)
+                .name(name)
+                .category(category)
+                .price(price)
+                .warrantyPolicy(warrantyPolicy.toGetWarrantyPolicyDto())
+                .producer(producer.toGetProducerDto())
+                .build();
+
+        var expectedProduct2 = GetProductDto.builder()
+                .id(id2)
+                .name(name2)
+                .category(category)
+                .price(price2)
+                .warrantyPolicy(warrantyPolicy.toGetWarrantyPolicyDto())
+                .producer(producer.toGetProducerDto())
+                .build();
+
+        var min = new BigDecimal("50");
+        var max = new BigDecimal("250");
+
+        when(productRepository.findAllByProducer(producer))
+                .thenReturn(List.of(product,product2));
+
+        assertThat(productsService.findAllByProducer(producer))
                 .hasSize(2)
                 .containsAll(List.of(expectedProduct,expectedProduct2));
     }
