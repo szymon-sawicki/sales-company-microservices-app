@@ -656,6 +656,7 @@ public class ProductsServiceTest {
 
         var id = 5L;
         var id2 = 7L;
+        var producerId = 78L;
         var price = new BigDecimal("150");
         var price2 = new BigDecimal("200");
         var name = "testex1";
@@ -665,6 +666,7 @@ public class ProductsServiceTest {
 
         var warrantyPolicy = WarrantyPolicy.builder().build();
         var producer = Producer.builder()
+                .id(producerId)
                 .address(Address.builder().build())
                 .warrantyPolicies(List.of(warrantyPolicy))
                 .build();
@@ -708,10 +710,13 @@ public class ProductsServiceTest {
         var min = new BigDecimal("50");
         var max = new BigDecimal("250");
 
-        when(productRepository.findAllByProducer(producer))
+        when(producerRepository.findById(producerId))
+                .thenReturn(Optional.of(producer));
+
+        when(productRepository.findAllByProducer(any(Producer.class)))
                 .thenReturn(List.of(product,product2));
 
-        assertThat(productsService.findAllByProducer(producer))
+        assertThat(productsService.findAllByProducer(78L))
                 .hasSize(2)
                 .containsAll(List.of(expectedProduct,expectedProduct2));
     }

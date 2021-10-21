@@ -168,12 +168,18 @@ public class ProductsService {
                 .toList();
     }
 
-    public List<GetProductDto> findAllByProducer(Producer producer) {
-        if(producer == null) {
+    public List<GetProductDto> findAllByProducer(Long producerId) {
+        if(producerId == null) {
             throw new ProductsServiceException("producer is null");
         }
+        if(producerId <= 0) {
+            throw new ProductsServiceException("producer id is equal or lower than 0");
+        }
 
-        return productRepository.findAllByProducer(producer)
+        var producerFromDb = producerRepository.findById(producerId)
+                .orElseThrow(() -> new ProductsServiceException("cannot find producer"));
+
+        return productRepository.findAllByProducer(producerFromDb)
                 .stream()
                 .map(Product::toGetProductDto)
                 .toList();

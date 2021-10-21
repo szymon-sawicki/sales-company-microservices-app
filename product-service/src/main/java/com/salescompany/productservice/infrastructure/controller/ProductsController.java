@@ -58,9 +58,8 @@ public class ProductsController {
     }
 
     @GetMapping("/producer/{id}")
-    public ResponseDataDto<List<GetProductDto>> findProductsByProducer(@PathVariable Long producerId) {
-      // TODO  return ResponseDataDto.toResponse(productsService.findAllByProducer();
-        return null;
+    public ResponseDataDto<List<GetProductDto>> findProductsByProducer(@PathVariable Long id) {
+        return ResponseDataDto.toResponse(productsService.findAllByProducer(id));
     }
 
     @GetMapping("/price")
