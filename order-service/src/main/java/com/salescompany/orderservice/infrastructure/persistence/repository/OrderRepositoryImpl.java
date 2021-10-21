@@ -18,12 +18,12 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Optional<Order> delete(Long aLong) {
+    public Optional<Order> delete(Long id) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<Order> findById(Long aLong) {
+    public Optional<Order> findById(Long id) {
         return Optional.empty();
     }
 
@@ -33,7 +33,17 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> findAllById(List<Long> longs) {
+    public List<Order> findAllById(List<Long> ids) {
         return null;
+    }
+
+    @Override
+    public Optional<Order> findAllByShopId(Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Order> findAllByUserId(Long id) {
+        return Optional.empty();
     }
 }
