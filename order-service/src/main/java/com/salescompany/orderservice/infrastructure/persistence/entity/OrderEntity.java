@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Map;
 
 @Setter
 @Getter
@@ -31,7 +32,7 @@ public class OrderEntity extends BaseEntity {
     @CollectionTable(name = "order_products",joinColumns = {@JoinColumn(name = "order_id",referencedColumnName = "id")})
     @MapKeyColumn(name = "product_id")
     @Column(name="quantity")
-    private HashMap<Long,Integer> productsMap;
+    private Map<Long,Integer> productsMap = new HashMap<Long,Integer>();
 
     @Column(name = "date_time")
     private LocalDateTime dateTime;

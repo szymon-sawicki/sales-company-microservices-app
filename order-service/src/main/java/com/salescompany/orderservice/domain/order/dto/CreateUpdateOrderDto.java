@@ -22,15 +22,20 @@ public class CreateUpdateOrderDto {
 
 
     public Order toOrder() {
-
         return Order.builder()
                 .customerId(customerId)
                 .managerId(managerId)
                 .shopId(shopId)
                 .productsMap(productsMap)
                 .build();
-
-
+    }
+    public GetOrderDto toGetOrderDto() {
+        return GetOrderDto.builder()
+                .customerId(customerId)
+                .managerId(managerId)
+                .shopId(shopId)
+                .productsMap(productsMap)
+                .build();
     }
 
 }

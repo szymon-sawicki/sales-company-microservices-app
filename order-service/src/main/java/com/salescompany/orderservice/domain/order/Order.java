@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Builder
@@ -18,7 +17,7 @@ public class Order {
     Long managerId;
     Long shopId;
     // key is product's id, value - quantity
-    HashMap<Long,Integer> productsMap;
+    Map<Long,Integer> productsMap;
     LocalDateTime dateTime;
 
     public OrderEntity toEntity() {

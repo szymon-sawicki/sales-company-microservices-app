@@ -5,12 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.salescompany.orderservice.infrastructure.persistence.entity.OrderEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrderDao extends JpaRepository<OrderEntity,Long> {
+public interface OrderEntityDao extends JpaRepository<OrderEntity,Long> {
 
-    Optional<Order> findAllByShopId(Long id);
-    Optional<Order> findAllByUserId(Long id);
+    List<OrderEntity> findAllByShopIdIn(List<Long> ids);
+    List<OrderEntity> findAllByCustomerIdIn(List<Long> ids);
 
 }

@@ -22,20 +22,24 @@ public class OrdersService {
     GetOrderDto create(CreateUpdateOrderDto createUpdateOrderDto) {
         // TODO validate
 
-        if (userServiceProxy.findById(createUpdateOrderDto.getUserId()) != null) {
-            throw new OrdersServiceException("cannot find user");
+        if (userServiceProxy.findById(createUpdateOrderDto.getCustomerId()) != null) {
+            throw new OrdersServiceException("cannot find customer");
         }
 
-        var productsIds = createUpdateOrderDto.getProductsId();
+        if (userServiceProxy.findById(createUpdateOrderDto.getManagerId()) != null) {
+            throw new OrdersServiceException("cannot find manager");
+        }
 
-        var idsToCheck = productsIds
+       // var productsIds = createUpdateOrderDto.getProductsId();
+
+    /*    var idsToCheck = productsIds
                 .stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
 
         if(productServiceProxy.findAllByIds(idsToCheck).size() != productsIds.size()) {
             throw new OrdersServiceException("cannot find all products");
-        }
+        }*/
 
 
         // sprawdzamy czy produkty i userzy istnieja
