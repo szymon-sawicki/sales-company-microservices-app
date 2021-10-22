@@ -11,7 +11,8 @@ import java.util.Optional;
 @Repository
 public interface OrderEntityDao extends JpaRepository<OrderEntity,Long> {
 
-    List<OrderEntity> findAllByShopIdIn(List<Long> ids);
-    List<OrderEntity> findAllByCustomerIdIn(List<Long> ids);
+    List<OrderEntity> findAllByShopId(Long id);
+    List<OrderEntity> findAllByCustomerId(Long id);
+    List<OrderEntity> findAllByManagerId(Long id);
 
 }

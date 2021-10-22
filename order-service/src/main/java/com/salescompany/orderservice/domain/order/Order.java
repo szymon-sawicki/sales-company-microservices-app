@@ -29,7 +29,19 @@ public class Order {
                 .shopId(shopId)
                 .productsMap(productsMap)
                 .build();
+    }
+
+    public Order withId(Long newId) {
+
+        return Order.builder()
+                .id(newId)
+                .customerId(customerId)
+                .managerId(managerId)
+                .shopId(shopId)
+                .productsMap(productsMap)
+                .build();
+    }
 
     }
 
-}
+

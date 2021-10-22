@@ -57,18 +57,26 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> findAllByShopId(List<Long> ids) {
+    public List<Order> findAllByShopId(Long id) {
 
-        return orderEntityDao.findAllByShopIdIn(ids)
+        return orderEntityDao.findAllByShopId(id)
                 .stream()
                 .map(OrderEntity::toOrder)
                 .toList();
     }
 
     @Override
-    public List<Order> findAllByUserId(List<Long> ids) {
+    public List<Order> findAllByConsumerId(Long id) {
 
-        return orderEntityDao.findAllByCustomerIdIn(ids)
+        return orderEntityDao.findAllByCustomerId(id)
+                .stream()
+                .map(OrderEntity::toOrder)
+                .toList();
+    }
+
+    @Override
+    public List<Order> findAllByManagerId(Long id) {
+        return orderEntityDao.findAllByManagerId(id)
                 .stream()
                 .map(OrderEntity::toOrder)
                 .toList();
