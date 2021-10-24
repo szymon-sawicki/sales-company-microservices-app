@@ -15,7 +15,7 @@ public interface Validator<T> {
                     .stream()
                     .map(e-> e.getKey() + ": " + e.getValue())
                     .collect(joining(", "));
-            throw new com.salescompany.productservice.domain.configs.validator.ValidatorException("[VALIDATION ERRORS]: " + message);
+            throw new ValidatorException("[VALIDATION ERRORS]: " + message);
         }
 
     }
