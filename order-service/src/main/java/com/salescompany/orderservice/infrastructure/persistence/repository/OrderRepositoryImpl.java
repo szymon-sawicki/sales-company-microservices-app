@@ -66,7 +66,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> findAllByConsumerId(Long id) {
+    public List<Order> findAllByCustomerId(Long id) {
 
         return orderEntityDao.findAllByCustomerId(id)
                 .stream()

@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface OrderRepository extends CrudRepository<Order, Long> {
 
     List<Order> findAllByShopId(Long id);
-    List<Order> findAllByConsumerId(Long id);
+    List<Order> findAllByCustomerId(Long id);
     List<Order> findAllByManagerId(Long id);
 
 

@@ -9,7 +9,6 @@ import com.salescompany.orderservice.domain.order.dto.validator.CreateUpdateOrde
 import com.salescompany.orderservice.domain.order.repository.OrderRepository;
 import com.salescompany.orderservice.infrastructure.proxy.ProductServiceProxy;
 import com.salescompany.orderservice.infrastructure.proxy.UserServiceProxy;
-import com.salescompany.orderservice.infrastructure.proxy.dto.GetProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -71,7 +70,7 @@ public class OrdersService {
 
     }
 
-    public List<GetOrderDto> findAllByConsumer(Long id) {
+    public List<GetOrderDto> findAllByCustomer(Long id) {
 
         if (id == null) {
             throw new OrdersServiceException("id is null");
@@ -81,7 +80,7 @@ public class OrdersService {
             throw new OrdersServiceException("id is 0 or negative");
         }
 
-        return orderRepository.findAllByConsumerId(id)
+        return orderRepository.findAllByCustomerId(id)
                 .stream()
                 .map(Order::toGetOrderDto)
                 .toList();
