@@ -1,14 +1,19 @@
 package com.salescompany.orderservice.application.service;
 
 import com.salescompany.orderservice.application.service.exception.OrdersServiceException;
+import com.salescompany.orderservice.domain.configs.validator.Validator;
+import com.salescompany.orderservice.domain.order.Order;
 import com.salescompany.orderservice.domain.order.dto.CreateUpdateOrderDto;
 import com.salescompany.orderservice.domain.order.dto.GetOrderDto;
+import com.salescompany.orderservice.domain.order.dto.validator.CreateUpdateOrderDtoValidator;
 import com.salescompany.orderservice.domain.order.repository.OrderRepository;
 import com.salescompany.orderservice.infrastructure.proxy.ProductServiceProxy;
 import com.salescompany.orderservice.infrastructure.proxy.UserServiceProxy;
+import com.salescompany.orderservice.infrastructure.proxy.dto.GetProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,7 +25,7 @@ public class OrdersService {
     private final UserServiceProxy userServiceProxy;
 
     GetOrderDto create(CreateUpdateOrderDto createUpdateOrderDto) {
-        // TODO validate
+        Validator.validate(new CreateUpdateOrderDtoValidator(), createUpdateOrderDto);
 
         if (userServiceProxy.findById(createUpdateOrderDto.getCustomerId()) != null) {
             throw new OrdersServiceException("cannot find customer");
@@ -30,23 +35,132 @@ public class OrdersService {
             throw new OrdersServiceException("cannot find manager");
         }
 
-       // var productsIds = createUpdateOrderDto.getProductsId();
+        var products = createUpdateOrderDto.getProductsMap()
+                .keySet();
 
-    /*    var idsToCheck = productsIds
+        var idsToCheck = products
                 .stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
 
-        if(productServiceProxy.findAllByIds(idsToCheck).size() != productsIds.size()) {
+
+        if (productServiceProxy.findAllByIds(idsToCheck).size() != products.size()) {
             throw new OrdersServiceException("cannot find all products");
-        }*/
+        }
 
+        return orderRepository.add(createUpdateOrderDto.toOrder())
+                .orElseThrow(() -> new OrdersServiceException("cannot add new order"))
+                .toGetOrderDto();
 
-        // sprawdzamy czy produkty i userzy istnieja
-        //collection table -> id of products in entity
+    }
 
-        return null;
+    public List<GetOrderDto> findAllByShop(Long id) {
 
+        if (id == null) {
+            throw new OrdersServiceException("id is null");
+        }
+
+        if (id <= 0) {
+            throw new OrdersServiceException("id is 0 or negative");
+        }
+
+        return orderRepository.findAllByShopId(id)
+                .stream()
+                .map(Order::toGetOrderDto)
+                .toList();
+
+    }
+
+    public List<GetOrderDto> findAllByConsumer(Long id) {
+
+        if (id == null) {
+            throw new OrdersServiceException("id is null");
+        }
+
+        if (id <= 0) {
+            throw new OrdersServiceException("id is 0 or negative");
+        }
+
+        return orderRepository.findAllByConsumerId(id)
+                .stream()
+                .map(Order::toGetOrderDto)
+                .toList();
+
+    }
+
+    public List<GetOrderDto> findAllByManager(Long id) {
+
+        if (id == null) {
+            throw new OrdersServiceException("id is null");
+        }
+
+        if (id <= 0) {
+            throw new OrdersServiceException("id is 0 or negative");
+        }
+
+        return orderRepository.findAllByManagerId(id)
+                .stream()
+                .map(Order::toGetOrderDto)
+                .toList();
+
+    }
+
+    public GetOrderDto findById(Long id) {
+
+        if (id == null) {
+            throw new OrdersServiceException("id is null");
+        }
+
+        if (id <= 0) {
+            throw new OrdersServiceException("id is 0 or negative");
+        }
+
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new OrdersServiceException("cannot find order by id"))
+                .toGetOrderDto();
+
+    }
+
+    public GetOrderDto delete(Long id) {
+
+        if (id == null) {
+            throw new OrdersServiceException("id is null");
+        }
+
+        if (id <= 0) {
+            throw new OrdersServiceException("id is 0 or negative");
+        }
+
+        var orderToDelete = orderRepository.findById(id)
+                .orElseThrow(() -> new OrdersServiceException("cannot find order to delete"));
+
+        orderRepository.delete(id);
+
+        return orderToDelete.toGetOrderDto();
+
+    }
+
+    public GetOrderDto update(Long id,CreateUpdateOrderDto createUpdateOrderDto) {
+
+        if (id == null) {
+            throw new OrdersServiceException("id is null");
+        }
+
+        if (id <= 0) {
+            throw new OrdersServiceException("id is 0 or negative");
+        }
+
+        if(orderRepository.findById(id).isEmpty()) {
+            throw new OrdersServiceException("cannot find order to update");
+        }
+
+        Validator.validate(new CreateUpdateOrderDtoValidator(),createUpdateOrderDto);
+
+        var orderToUpdate = createUpdateOrderDto.toOrder().withId(id);
+
+        return orderRepository.add(orderToUpdate)
+                .orElseThrow(() -> new OrdersServiceException("cannot update order"))
+                .toGetOrderDto();
     }
 
 }

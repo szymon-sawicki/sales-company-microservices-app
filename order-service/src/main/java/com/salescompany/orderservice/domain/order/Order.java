@@ -1,5 +1,6 @@
 package com.salescompany.orderservice.domain.order;
 
+import com.salescompany.orderservice.domain.order.dto.GetOrderDto;
 import com.salescompany.orderservice.infrastructure.persistence.entity.OrderEntity;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -23,6 +24,17 @@ public class Order {
     public OrderEntity toEntity() {
 
         return OrderEntity.builder()
+                .id(id)
+                .customerId(customerId)
+                .managerId(managerId)
+                .shopId(shopId)
+                .productsMap(productsMap)
+                .build();
+    }
+
+    public GetOrderDto toGetOrderDto() {
+
+        return GetOrderDto.builder()
                 .id(id)
                 .customerId(customerId)
                 .managerId(managerId)

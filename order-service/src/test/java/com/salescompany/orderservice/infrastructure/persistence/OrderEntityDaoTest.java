@@ -2,6 +2,7 @@ package com.salescompany.orderservice.infrastructure.persistence;
 
 import com.salescompany.orderservice.infrastructure.persistence.dao.OrderEntityDao;
 import com.salescompany.orderservice.infrastructure.persistence.entity.OrderEntity;
+import com.salescompany.orderservice.infrastructure.proxy.dto.GetProductDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -188,8 +190,24 @@ public class OrderEntityDaoTest {
         assertThat(orderEntityDao.save(order).getShopId())
                 .isEqualTo(7L);
 
+    }
+
+    @Test
+    @DisplayName("when order with multiple products is created")
+    public void test9() {
 
 
+        var map1 = new HashMap<Long,Integer>();
+        map1.put(2L,67);
+        map1.put(7L,25);
+
+
+        var order1 = OrderEntity.builder().customerId(4L).productsMap(map1).build();
+
+
+        assertThat(orderEntityDao.save(order1).getProductsMap())
+                .hasSize(2)
+                .containsAllEntriesOf(map1);
 
     }
 

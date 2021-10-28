@@ -11,7 +11,7 @@ import java.util.List;
 @FeignClient(value = "product-service",contextId = "product-inside-order-service")
 public interface ProductServiceProxy {
 
-    @GetMapping("/byId")
+    @GetMapping("/ids")
     List<GetProductDto> findAllByIds(@RequestParam String ids);
 
 
