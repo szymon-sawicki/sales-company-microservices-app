@@ -27,11 +27,11 @@ public class OrdersService {
     GetOrderDto create(CreateUpdateOrderDto createUpdateOrderDto) {
         Validator.validate(new CreateUpdateOrderDtoValidator(), createUpdateOrderDto);
 
-        if (userServiceProxy.findById(createUpdateOrderDto.getCustomerId()) != null) {
+        if (userServiceProxy.findById(createUpdateOrderDto.getCustomerId()) == null) {
             throw new OrdersServiceException("cannot find customer");
         }
 
-        if (userServiceProxy.findById(createUpdateOrderDto.getManagerId()) != null) {
+        if (userServiceProxy.findById(createUpdateOrderDto.getManagerId()) == null) {
             throw new OrdersServiceException("cannot find manager");
         }
 
@@ -162,5 +162,24 @@ public class OrdersService {
                 .orElseThrow(() -> new OrdersServiceException("cannot update order"))
                 .toGetOrderDto();
     }
+
+    List<GetOrderDto> findAllByIds(List<Long> ids) {
+
+        if(ids == null) {
+            throw new OrdersServiceException("ids are null");
+        }
+
+        if(ids.isEmpty()) {
+            throw new OrdersServiceException("ids are empty");
+        }
+
+        return orderRepository.findAllById(ids)
+                .stream()
+                .map(Order::toGetOrderDto)
+                .toList();
+
+    }
+
+
 
 }
