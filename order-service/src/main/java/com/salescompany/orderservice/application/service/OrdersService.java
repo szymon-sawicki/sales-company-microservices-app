@@ -23,29 +23,9 @@ public class OrdersService {
     private final ProductServiceProxy productServiceProxy;
     private final UserServiceProxy userServiceProxy;
 
-    GetOrderDto create(CreateUpdateOrderDto createUpdateOrderDto) {
-        Validator.validate(new CreateUpdateOrderDtoValidator(), createUpdateOrderDto);
+    public GetOrderDto create(CreateUpdateOrderDto createUpdateOrderDto) {
 
-        if (userServiceProxy.findById(createUpdateOrderDto.getCustomerId()) == null) {
-            throw new OrdersServiceException("cannot find customer");
-        }
-
-        if (userServiceProxy.findById(createUpdateOrderDto.getManagerId()) == null) {
-            throw new OrdersServiceException("cannot find manager");
-        }
-
-        var products = createUpdateOrderDto.getProductsMap()
-                .keySet();
-
-        var idsToCheck = products
-                .stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
-
-
-        if (productServiceProxy.findAllByIds(idsToCheck).size() != products.size()) {
-            throw new OrdersServiceException("cannot find all products");
-        }
+        checkOrder(createUpdateOrderDto);
 
         return orderRepository.add(createUpdateOrderDto.toOrder())
                 .orElseThrow(() -> new OrdersServiceException("cannot add new order"))
@@ -153,7 +133,7 @@ public class OrdersService {
             throw new OrdersServiceException("cannot find order to update");
         }
 
-        Validator.validate(new CreateUpdateOrderDtoValidator(),createUpdateOrderDto);
+        checkOrder(createUpdateOrderDto);
 
         var orderToUpdate = createUpdateOrderDto.toOrder().withId(id);
 
@@ -176,6 +156,34 @@ public class OrdersService {
                 .stream()
                 .map(Order::toGetOrderDto)
                 .toList();
+
+    }
+
+
+    private void checkOrder(CreateUpdateOrderDto createUpdateOrderDto) {
+
+        Validator.validate(new CreateUpdateOrderDtoValidator(), createUpdateOrderDto);
+
+        if (userServiceProxy.findById(createUpdateOrderDto.getCustomerId()) == null) {
+            throw new OrdersServiceException("cannot find customer");
+        }
+
+        if (userServiceProxy.findById(createUpdateOrderDto.getManagerId()) == null) {
+            throw new OrdersServiceException("cannot find manager");
+        }
+
+        var products = createUpdateOrderDto.getProductsMap()
+                .keySet();
+
+        var idsToCheck = products
+                .stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+
+
+        if (productServiceProxy.findAllByIds(idsToCheck).size() != products.size()) {
+            throw new OrdersServiceException("cannot find all products");
+        }
 
     }
 

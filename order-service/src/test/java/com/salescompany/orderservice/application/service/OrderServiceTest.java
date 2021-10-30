@@ -529,5 +529,96 @@ public class OrderServiceTest {
 
     }
 
+    @Test
+    @DisplayName("when order is updated and cannot be found by id")
+    public void test18() {
+
+        when(orderRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> ordersService.update(5L, CreateUpdateOrderDto.builder().build()))
+                .isInstanceOf(OrdersServiceException.class)
+                .hasMessageContaining("cannot find order to update");
+
+    }
+
+    @Test
+    @DisplayName("when order is deleted and id is null")
+    public void test20() {
+
+        assertThatThrownBy(() -> ordersService.delete(null))
+                .isInstanceOf(OrdersServiceException.class)
+                .hasMessageContaining("id is null");
+
+    }
+
+    @Test
+    @DisplayName("when order is updated correctly")
+    public void test19() {
+
+        var productsMap = new HashMap<Long, Integer>();
+        productsMap.put(2L, 45);
+        productsMap.put(4L, 55);
+
+        var id = 7L;
+
+        var customerId = 45L;
+        var shopId = 6L;
+        var managerId = 77L;
+
+
+        var order = CreateUpdateOrderDto.builder()
+                .customerId(customerId)
+                .shopId(shopId)
+                .managerId(managerId)
+                .productsMap(productsMap)
+                .build();
+
+        var orderFromDb = Order.builder()
+                .id(id)
+                .customerId(customerId)
+                .shopId(shopId)
+                .managerId(managerId)
+                .productsMap(productsMap)
+                .build();
+
+        var expectedOrder = GetOrderDto.builder()
+                .id(id)
+                .customerId(customerId)
+                .shopId(shopId)
+                .managerId(managerId)
+                .productsMap(productsMap)
+                .build();
+
+        when(orderRepository.findById(id))
+                .thenReturn(Optional.of(orderFromDb));
+
+        when(userServiceProxy.findById(anyLong()))
+                .thenReturn(GetUserDto.builder().build());
+
+        when(productServiceProxy.findAllByIds(any()))
+                .thenReturn(List.of(
+                        GetProductDto.builder().id(2L).build(),
+                        GetProductDto.builder().id(4L).build()));
+
+        when(orderRepository.add(any(Order.class)))
+                .thenReturn(Optional.of(orderFromDb));
+
+        assertThat(ordersService.update(7L,order))
+                .isEqualTo(expectedOrder);
+
+
+    }
+
+    @Test
+    @DisplayName("when order is updated and id is null")
+    public void test21() {
+
+        assertThatThrownBy(() -> ordersService.update(null, CreateUpdateOrderDto.builder().build()))
+                .isInstanceOf(OrdersServiceException.class)
+                .hasMessageContaining("id is null");
+
+    }
+
 
 }
