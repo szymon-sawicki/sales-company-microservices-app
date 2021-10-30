@@ -142,7 +142,7 @@ public class OrdersService {
                 .toGetOrderDto();
     }
 
-    List<GetOrderDto> findAllByIds(List<Long> ids) {
+    public List<GetOrderDto> findAllByIds(List<Long> ids) {
 
         if(ids == null) {
             throw new OrdersServiceException("ids are null");

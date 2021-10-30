@@ -7,6 +7,7 @@ import com.salescompany.orderservice.infrastructure.controller.dto.ResponseDataD
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -41,4 +42,21 @@ public class OrderController {
     public ResponseDataDto<List<GetOrderDto>> findAllByManager(@PathVariable Long id) {
         return ResponseDataDto.toResponse(ordersService.findAllByManager(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseDataDto<GetOrderDto> updateOrder(@PathVariable Long id, @RequestBody CreateUpdateOrderDto createUpdateOrderDto) {
+        return ResponseDataDto.toResponse(ordersService.update(id, createUpdateOrderDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseDataDto<GetOrderDto> deleteOrder(@PathVariable Long id) {
+        return ResponseDataDto.toResponse(ordersService.delete(id));
+    }
+
+    @GetMapping("/ids")
+    public ResponseDataDto<List<GetOrderDto>> getAllByIds(@RequestParam String ids) {
+        var idsConverted = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
+        return ResponseDataDto.toResponse(ordersService.findAllByIds(idsConverted));
+    }
+
 }
