@@ -12,7 +12,6 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,8 +22,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UsersController.class)
@@ -57,13 +55,13 @@ public class UsersControllerTest {
                                 .get("/users/1")
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.notNullValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username",Matchers.equalTo("andreas12")));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username", Matchers.equalTo("andreas12")));
 
     }
 
     @Test
-    @DisplayName("when user is created")
-    public void test2() throws Exception{
+    @DisplayName("when user with customer role is created")
+    public void test2() throws Exception {
 
         var username = "TestUser1";
         var id = 2L;
@@ -87,8 +85,8 @@ public class UsersControllerTest {
                                 .content(toJson(user))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.jsonPath("$",Matchers.notNullValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username",Matchers.equalTo("TestUser1")));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username", Matchers.equalTo("TestUser1")));
 
     }
 
@@ -115,7 +113,7 @@ public class UsersControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.notNullValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username",Matchers.equalTo("Andreas12")));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username", Matchers.equalTo("Andreas12")));
 
     }
 
@@ -143,11 +141,11 @@ public class UsersControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.notNullValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username",Matchers.equalTo("Andreas12")));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username", Matchers.equalTo("Andreas12")));
 
     }
 
-    private static<T> String toJson(T t) {
+    private static <T> String toJson(T t) {
         try {
             return new ObjectMapper().writeValueAsString(t);
         } catch (JsonProcessingException e) {

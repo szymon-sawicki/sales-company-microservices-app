@@ -2,6 +2,7 @@ package com.salescompany.userservice.infrastructure.persistence;
 
 import com.salescompany.userservice.infrastructure.persistence.dao.UserEntityDao;
 import com.salescompany.userservice.infrastructure.persistence.entity.UserEntity;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
@@ -16,6 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
+
 public class UserEntityDaoTest {
 
     @Autowired
@@ -65,11 +68,9 @@ public class UserEntityDaoTest {
         var user1 = UserEntity.builder().username(username1).mail(mail1).build();
         var user2 = UserEntity.builder().username(username2).mail(mail2).build();
 
-
         testEntityManager.persist(user1);
         testEntityManager.persist(user2);
         testEntityManager.flush();
-
 
         assertThat(userEntityDao.findById(4L))
                 .isEqualTo(Optional.of(insertedUser2));

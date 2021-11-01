@@ -152,7 +152,6 @@ public class UsersService {
         return userRepository.delete(id)
                 .orElseThrow(() -> new UsersServiceException("cannot delete user"))
                 .toGetUserDto();
-
     }
 
 
