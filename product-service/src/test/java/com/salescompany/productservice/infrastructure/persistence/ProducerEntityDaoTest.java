@@ -14,6 +14,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
+
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class ProducerEntityDaoTest {
@@ -37,7 +39,7 @@ public class ProducerEntityDaoTest {
 
         var expectedNames = List.of("tech corp", "food corp");
 
-        Assertions.assertThat(producerEntityDao.findAll().stream().map(ProducerEntity::getName).toList())
+        assertThat(producerEntityDao.findAll().stream().map(ProducerEntity::getName).toList())
                 .hasSize(2)
                 .containsAll(expectedNames);
     }
@@ -54,7 +56,7 @@ public class ProducerEntityDaoTest {
         testEntityManager.flush();
 
 
-        Assertions.assertThat(producerEntityDao.findByName("tech cosporation"))
+        assertThat(producerEntityDao.findByName("tech cosporation"))
                 .isPresent();
     }
 
@@ -73,7 +75,7 @@ public class ProducerEntityDaoTest {
 
         var expectedNames = List.of("tech corporation","food corporation");
 
-        Assertions.assertThat(producerEntityDao.findAllByIndustry(Industry.ELECTRONIC)
+        assertThat(producerEntityDao.findAllByIndustry(Industry.ELECTRONIC)
                         .stream()
                         .map(ProducerEntity::getName)
                         .toList())
@@ -87,7 +89,9 @@ public class ProducerEntityDaoTest {
 
         var producer1 = ProducerEntity.builder().name("tech corporation").industry(Industry.ELECTRONIC).build();
 
-        Assertions.assertThat(producerEntityDao.save(producer1).getName())
+
+
+        assertThat(producerEntityDao.save(producer1).getName())
                 .isEqualTo("tech corporation");
     }
 

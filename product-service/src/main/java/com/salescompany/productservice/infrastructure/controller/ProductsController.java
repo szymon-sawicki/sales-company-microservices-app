@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import static com.salescompany.productservice.infrastructure.controller.dto.ResponseDataDto.*;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/products")
@@ -23,48 +25,48 @@ public class ProductsController {
 
     @PostMapping
     public ResponseDataDto<GetProductDto> productCreation(@RequestBody CreateUpdateProductDto createUpdateProductDto) {
-        return ResponseDataDto.toResponse(productsService.create(createUpdateProductDto));
+        return toResponse(productsService.create(createUpdateProductDto));
     }
 
     @GetMapping("/{id}")
     public ResponseDataDto<GetProductDto> findProductById(@PathVariable Long id) {
-        return ResponseDataDto.toResponse(productsService.findById(id));
+        return toResponse(productsService.findById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseDataDto<GetProductDto> deleteProduct(@PathVariable Long id) {
-        return ResponseDataDto.toResponse(productsService.delete(id));
+        return toResponse(productsService.delete(id));
     }
 
     @PutMapping("/{id}")
     public ResponseDataDto<GetProductDto> update(@PathVariable Long id, @RequestBody CreateUpdateProductDto createUpdateProductDto) {
-        return ResponseDataDto.toResponse(productsService.update(id, createUpdateProductDto));
+        return toResponse(productsService.update(id, createUpdateProductDto));
     }
 
     @GetMapping("/ids")
     public ResponseDataDto<List<GetProductDto>> getProductsByIds(@RequestParam String ids) {
         var idsConverted = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
-        return ResponseDataDto.toResponse(productsService.findAllById(idsConverted));
+        return toResponse(productsService.findAllById(idsConverted));
     }
 
     @GetMapping("/name/{name}")
     public ResponseDataDto<GetProductDto> findProductByName(@PathVariable String name) {
-        return ResponseDataDto.toResponse(productsService.findByName(name));
+        return toResponse(productsService.findByName(name));
     }
 
     @GetMapping("/category/{category}")
     public ResponseDataDto<List<GetProductDto>> findProductsByCategory(@PathVariable String category) {
-        return ResponseDataDto.toResponse(productsService.findAllByCategory(Category.valueOf(category.toUpperCase(Locale.ROOT))));
+        return toResponse(productsService.findAllByCategory(Category.valueOf(category.toUpperCase(Locale.ROOT))));
     }
 
     @GetMapping("/producer/{id}")
     public ResponseDataDto<List<GetProductDto>> findProductsByProducer(@PathVariable Long id) {
-        return ResponseDataDto.toResponse(productsService.findAllByProducer(id));
+        return toResponse(productsService.findAllByProducer(id));
     }
 
     @GetMapping("/price")
     public ResponseDataDto<List<GetProductDto>> findProductsInPriceRange(@RequestParam String min, @RequestParam String max) {
-        return ResponseDataDto.toResponse(productsService.findAllInPriceRange(new BigDecimal(min), new BigDecimal(max)));
+        return toResponse(productsService.findAllInPriceRange(new BigDecimal(min), new BigDecimal(max)));
     }
 
 
