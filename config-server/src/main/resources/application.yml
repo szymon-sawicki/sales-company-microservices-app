@@ -3,9 +3,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/kmprograms/microservices-sroda
-          # password:
-          # username:
+          uri: https://github.com/szymon-sawicki/sales-company-configs
   application:
     name: spring-cloud-config-server
 server:
