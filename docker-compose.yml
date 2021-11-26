@@ -53,6 +53,23 @@ services:
     networks:
       - sales-company-network
 
+  mysql4:
+    image: mysql:latest
+    volumes:
+      - mysql4:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_4
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user1234
+      MYSQL_TCP_PORT: 3310
+    ports:
+      - "3310:3310"
+    expose:
+      - 3310
+    networks:
+      - sales-company-network
+
 
   eureka-server:
     image: eureka-server
@@ -98,6 +115,29 @@ services:
     networks:
       - sales-company-network
 
+  shop-service:
+    image: shop-service
+    build:
+      context: ./shop-service
+      dockerfile: Dockerfile
+    ports:
+      - "8500"
+    restart: always
+    networks:
+      - sales-company-network
+
+  config-server:
+    image: config-server
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    restart: always
+    networks:
+      - sales-company-network
+
+
   api-gateway:
     image: api-gateway
     build:
@@ -114,6 +154,7 @@ volumes:
   mysql1:
   mysql2:
   mysql3:
+  mysql4:
 
 networks:
   sales-company-network:

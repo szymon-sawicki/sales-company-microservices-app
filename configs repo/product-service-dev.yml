@@ -1,0 +1,8 @@
+jpa:
+  show-sql: true
+  hibernate:
+    ddl-auto: update
+datasource:
+  url: jdbc:mysql://mysql2:3308/db_2?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+  username: user
+  password: user1234

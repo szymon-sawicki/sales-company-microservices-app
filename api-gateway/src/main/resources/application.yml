@@ -19,6 +19,14 @@ spring:
           uri: http://book-service:8300
           predicates:
             - Path=/products/**
+        - id: order-service
+          uri: http://order-service:8400
+          predicates:
+            - Path=/orders/**
+        - id: shop-service
+          uri: http://shop-service:8500
+          predicates:
+            - Path=/shops/**
 
 # Dorzucamy loggery od api gateway
 logging:

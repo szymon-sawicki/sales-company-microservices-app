@@ -4,15 +4,10 @@ server:
 spring:
   application:
     name: order-service
-
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-  datasource:
-    url: jdbc:mysql://mysql3:3309/db_3?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
-    username: user
-    password: user1234
+  config:
+    import: optional:configserver:http://config-server:8888/
+  profiles:
+    active: dev
 
 eureka:
   client:
