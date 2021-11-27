@@ -5,17 +5,14 @@ import com.salescompany.productservice.domain.configs.validator.Validator;
 import com.salescompany.productservice.domain.configs.validator.ValidatorException;
 import com.salescompany.productservice.domain.producer.dto.CreateUpdateProducerDto;
 import com.salescompany.productservice.domain.producer.type.Industry;
-import com.salescompany.productservice.domain.warranty_policy.WarrantyPolicy;
 import com.salescompany.productservice.domain.warranty_policy.dto.CreateUpdateWarrantyPolicyDto;
-import com.salescompany.productservice.domain.warranty_policy.dto.GetWarrantyPolicyDto;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class CreateUpdateProducerDtoValidatorTest {
 
@@ -108,7 +105,6 @@ public class CreateUpdateProducerDtoValidatorTest {
                 .street("Main Street")
                 .houseNumber("2345")
                 .build();
-
 
         var producer = CreateUpdateProducerDto.builder()
                 .name(name)

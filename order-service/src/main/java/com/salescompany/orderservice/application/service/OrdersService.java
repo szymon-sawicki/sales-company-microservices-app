@@ -85,50 +85,38 @@ public class OrdersService {
     }
 
     public GetOrderDto findById(Long id) {
-
         if (id == null) {
             throw new OrdersServiceException("id is null");
         }
-
         if (id <= 0) {
             throw new OrdersServiceException("id is 0 or negative");
         }
-
         return orderRepository.findById(id)
                 .orElseThrow(() -> new OrdersServiceException("cannot find order by id"))
                 .toGetOrderDto();
-
     }
 
     public GetOrderDto delete(Long id) {
-
         if (id == null) {
             throw new OrdersServiceException("id is null");
         }
-
         if (id <= 0) {
             throw new OrdersServiceException("id is 0 or negative");
         }
 
         var orderToDelete = orderRepository.findById(id)
                 .orElseThrow(() -> new OrdersServiceException("cannot find order to delete"));
-
         orderRepository.delete(id);
-
         return orderToDelete.toGetOrderDto();
-
     }
 
     public GetOrderDto update(Long id,CreateUpdateOrderDto createUpdateOrderDto) {
-
         if (id == null) {
             throw new OrdersServiceException("id is null");
         }
-
         if (id <= 0) {
             throw new OrdersServiceException("id is 0 or negative");
         }
-
         if(orderRepository.findById(id).isEmpty()) {
             throw new OrdersServiceException("cannot find order to update");
         }
@@ -156,7 +144,6 @@ public class OrdersService {
                 .stream()
                 .map(Order::toGetOrderDto)
                 .toList();
-
     }
 
 
@@ -174,19 +161,13 @@ public class OrdersService {
 
         var products = createUpdateOrderDto.getProductsMap()
                 .keySet();
-
         var idsToCheck = products
                 .stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
 
-
         if (productServiceProxy.findAllByIds(idsToCheck).size() != products.size()) {
             throw new OrdersServiceException("cannot find all products");
         }
-
     }
-
-
-
 }
