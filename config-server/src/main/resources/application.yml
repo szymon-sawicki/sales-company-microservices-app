@@ -9,3 +9,13 @@ spring:
     name: spring-cloud-config-server
 server:
   port: 8888
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  health:
+    show-components: always
+
+    ## TODO check actuator endpoints

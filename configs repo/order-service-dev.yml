@@ -6,3 +6,11 @@ datasource:
   url: jdbc:mysql://mysql3:3309/db_3?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
   username: user
   password: user1234
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  health:
+    show-components: always

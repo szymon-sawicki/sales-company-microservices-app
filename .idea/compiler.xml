@@ -22,8 +22,8 @@
       <module name="eureka-server" target="16" />
       <module name="order-service" target="16" />
       <module name="products-service" target="16" />
-      <module name="shop-service" target="16" />
-      <module name="users-service" target="16" />
+      <module name="shop-service" target="17" />
+      <module name="users-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
