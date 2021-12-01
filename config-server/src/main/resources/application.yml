@@ -4,6 +4,7 @@ spring:
       server:
         git:
           uri: https://github.com/szymon-sawicki/sales-company-configs
+          default-label: main
   application:
     name: spring-cloud-config-server
 server:

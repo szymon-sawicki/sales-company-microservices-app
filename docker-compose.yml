@@ -115,16 +115,16 @@ services:
     networks:
       - sales-company-network
 
-  shop-service:
-    image: shop-service
-    build:
-      context: ./shop-service
-      dockerfile: Dockerfile
-    ports:
-      - "8500"
-    restart: always
-    networks:
-      - sales-company-network
+  #  shop-service:
+  #    image: shop-service
+  #    build:
+  #      context: ./shop-service
+  #      dockerfile: Dockerfile
+  #    ports:
+  #      - "8500"
+  #    restart: always
+  #    networks:
+  #      - sales-company-network
 
   config-server:
     image: config-server

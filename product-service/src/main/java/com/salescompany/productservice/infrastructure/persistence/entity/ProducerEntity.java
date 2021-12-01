@@ -3,11 +3,19 @@ package com.salescompany.productservice.infrastructure.persistence.entity;
 import com.salescompany.productservice.domain.producer.Producer;
 import com.salescompany.productservice.domain.producer.type.Industry;
 import com.salescompany.productservice.infrastructure.persistence.entity.base.BaseEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
-import java.util.ArrayList;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.List;
 
 @NoArgsConstructor
@@ -29,12 +37,8 @@ public class ProducerEntity extends BaseEntity {
     private AddressEntity addressEntity;
 
     // list of warranty strategies accepted by that producer
-    @OneToMany
+    @OneToMany(mappedBy = "producer", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     List<WarrantyPolicyEntity> warrantyPolicies;
-
-    @OneToMany(mappedBy="producer")
-    @Builder.Default
-    List<ProductEntity> products = new ArrayList<>();
 
     public Producer toProducer() {
         return Producer.builder()

@@ -3,11 +3,20 @@ package com.salescompany.productservice.infrastructure.persistence.entity;
 import com.salescompany.productservice.domain.warranty_policy.WarrantyPolicy;
 import com.salescompany.productservice.domain.warranty_policy.type.ServiceType;
 import com.salescompany.productservice.infrastructure.persistence.entity.base.BaseEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
-import java.util.ArrayList;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.List;
 
 @NoArgsConstructor
@@ -29,9 +38,8 @@ public class WarrantyPolicyEntity extends BaseEntity {
     @Column(name = "processing_period")
     Integer processingPeriod;
 
-/*    @OneToMany(mappedBy = "warranty_policy_id")
-    @Builder.Default
-    private List<ProductEntity> products = new ArrayList<>();*/
+    @ManyToOne
+    ProducerEntity producer;
 
     @ElementCollection(targetClass = ServiceType.class)
     @CollectionTable
