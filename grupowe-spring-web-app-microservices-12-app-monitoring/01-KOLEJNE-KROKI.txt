@@ -1,0 +1,47 @@
+==================================================================================================
+PRMOETHEUS
+==================================================================================================
+Potrzebujesz do projektu km-service-2 dolaczyc dependencies:
+UWAGA!!! Nie zmieniaj wersji micrometer-registry-prometheus na nowsza.
+                <dependency>
+                    <groupId>io.micrometer</groupId>
+                    <artifactId>micrometer-registry-prometheus</artifactId>
+                    <version>1.7.5</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-aop</artifactId>
+                </dependency>
+
+Taka konfiguracja powoduje ze actuator zaczyna dostarczac dane dla prometheus-a.
+Musisz je odblokowac:
+
+endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+
+Pozniej nalezy dodac kontener w docker-compose.yml od prometheusa.
+Rownolegle z plikiem docker-compose.yml nalezu dodac plik konfiguracyjny prometheus.yml
+
+scrape_configs:
+  - job_name: 'km-service-2'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['km-service-2:8200']
+
+W job_name oraz static_configs.targets wpisujemy nazwe naszego service, ktory chcemy monitorowac oraz jego port.
+Kiedy masz taka konfiguracje po prostu uruchom http://localhost:9090 i dostaniesz GUI w ktorym mozesz wyciagac
+parametry.
+
+Pamietaj ze zawsze mozesz podejrzec jakie dane udostepnia Prometheus pod:
+http://localhost:8200/actuator/prometheus
+
+==================================================================================================
+GRAFANA
+==================================================================================================
+Dodajesz w docker-compose.yml kontener od grafana.
+Kiedy juz kontener wstanie to idziesz pod url: http://localhost:3000/
+Wybierasz Datasource -> Prometheus ( nacisnij obok noego Select )
+Potem w oknie konfiguracyjnym wybierasz Access jako Browser.
+Kiedy sie logujesz pierwszy raz to podajesz username admin oraz haslo admin

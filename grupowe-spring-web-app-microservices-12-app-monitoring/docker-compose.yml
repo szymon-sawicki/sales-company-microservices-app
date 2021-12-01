@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - grupowe-network
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - grupowe-network
+
+  zipkin:
+    image: openzipkin/zipkin:2
+    ports:
+      - "9411:9411"
+    networks:
+      - grupowe-network
+
+  km-eureka-server:
+    image: km-eureka-server
+    build:
+      context: ./km-eureka-server
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8761:8761"
+    networks:
+      - grupowe-network
+
+  km-service-1:
+    image: km-service-1
+    build:
+      context: ./km-service-1
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8100"
+    depends_on:
+      - km-eureka-server
+    networks:
+      - grupowe-network
+
+  km-service-2:
+    image: km-service-2
+    build:
+      context: ./km-service-2
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8200:8200"
+    networks:
+      - grupowe-network
+
+networks:
+  grupowe-network:

@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: km-service-2
+
+  zipkin:
+    base-url: http://zipkin:9411/
+
+server:
+  port: 8200
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://km-eureka-server:8761/eureka
+  instance:
+    prefer-ip-address: true
+
+
+# ustawienia ktora pozwalaja udostepnic z poziomu actuatora uri dla prometheus
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  health:
+    show-components: always
+
+
