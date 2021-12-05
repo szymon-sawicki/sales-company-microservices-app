@@ -16,6 +16,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -37,8 +38,8 @@ public class ProducerEntity extends BaseEntity {
     private AddressEntity addressEntity;
 
     // list of warranty strategies accepted by that producer
-    @OneToMany(mappedBy = "producer", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    List<WarrantyPolicyEntity> warrantyPolicies;
+    @OneToMany(mappedBy = "producer", cascade = CascadeType.ALL)
+    List<WarrantyPolicyEntity> warrantyPolicies = new ArrayList<>();
 
     public Producer toProducer() {
         return Producer.builder()

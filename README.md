@@ -29,6 +29,6 @@ System for sales management in company with many shops and warehouses.
 - shop service
 - warehouse service
 
-## TODO
+## Issues TODO
 
-- refactoring in all services (make proper order of the methods and remove the whitespaces)
+- relation of producer doesn't work properly - empty list of warranty policies is returned

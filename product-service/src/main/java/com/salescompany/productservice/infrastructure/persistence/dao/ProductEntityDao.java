@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductEntityDao extends JpaRepository<ProductEntity,Long> {
+
     List<ProductEntity> findAllByProducer(ProducerEntity producerEntity);
     List<ProductEntity> findAllByCategory(Category category);
     List<ProductEntity> findAllByPriceBetween(BigDecimal min, BigDecimal max);
