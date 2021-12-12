@@ -9,16 +9,6 @@ spring:
   profiles:
     active: dev
 
-  mail:
-      host: smtp.gmail.com
-      username: szymon.app.test@gmail.com
-      password:
-      port: 587
-      protocol: smtp
-      properties:
-        mail.smtps.auth: true
-        mail.smtp.starttls.enable: true
-
 eureka:
   client:
     service-url:

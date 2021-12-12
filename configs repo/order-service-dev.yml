@@ -7,6 +7,16 @@ datasource:
   username: user
   password: user1234
 
+mail:
+  host: smtp.gmail.com
+  username: szymon.app.test@gmail.com
+  password:
+  port: 587
+  protocol: smtp
+  properties:
+    mail.smtps.auth: true
+    mail.smtp.starttls.enable: true
+
 management:
   endpoints:
     web:

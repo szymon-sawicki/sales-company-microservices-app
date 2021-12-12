@@ -53,7 +53,7 @@ public class UsersService {
                 .map(User::toCreateUserResponseDto)
                 .orElseThrow(() -> new UsersServiceException("cannot insert user"));
 
-        publisher.publishEvent(UserToActivateDto.builder().id(insertedUser.getId()).build());
+      // TODO fix email activation  publisher.publishEvent(UserToActivateDto.builder().id(insertedUser.getId()).build());
 
         return insertedUser;
 

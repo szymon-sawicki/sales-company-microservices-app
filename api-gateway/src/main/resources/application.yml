@@ -24,7 +24,7 @@ spring:
           predicates:
             - Path=/producers/**
         - id: order-service
-          uri: http://order-service:8400
+          uri: http://order-service:8400/orders
           predicates:
             - Path=/orders/**
 #        - id: shop-service
